@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatGPT — shaxsiy nusxa</title>
+  <meta name="description" content="ChatGPT uslubidagi chat interfeysi: streaming javoblar, suhbatlar tarixi va o'z API kalitingiz." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%230d0d0d'/%3E%3Cpath d='M20 9l2.6 6.4L29 18l-6.4 2.6L20 27l-2.6-6.4L11 18l6.4-2.6L20 9Z' fill='%2310a37f'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar" aria-label="Suhbatlar">
+    <div class="side-head">
+      <a class="brand" href="#" id="brand-link">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2L12 3Z" /></svg>
+        </span>
+        <span>ChatGPT</span>
+      </a>
+      <button class="icon-btn side-close" id="side-close" type="button" aria-label="Menyuni yopish">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </div>
+
+    <button class="new-chat" id="new-chat" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+      Yangi suhbat
+    </button>
+
+    <nav class="chat-nav" aria-label="Suhbatlar ro'yxati">
+      <div class="chat-list" id="chat-list"></div>
+    </nav>
+
+    <div class="side-foot">
+      <button class="side-item" id="open-settings" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" /></svg>
+        Sozlamalar
+      </button>
+
+      <div class="side-user">
+        <span class="avatar" aria-hidden="true">S</span>
+        <div class="side-user-copy">
+          <strong>Foydalanuvchi</strong>
+          <small id="mode-label">Demo rejim</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Menyuni ochish" aria-controls="sidebar" aria-expanded="false">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+      </button>
+
+      <div class="model-pill" id="model-pill">
+        <span class="model-dot" id="model-dot" aria-hidden="true"></span>
+        <span id="model-name">GPT-4o mini</span>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" id="open-settings-2" type="button" aria-label="Sozlamalar">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="chat-scroll" id="chat-scroll">
+      <section class="empty" id="empty">
+        <div class="empty-inner">
+          <span class="empty-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2L12 3Z" /></svg>
+          </span>
+          <h1>Nima ustida ishlaymiz?</h1>
+          <p class="empty-sub">Savol bering, kod yozing yoki matnni tahrirlang — birga hal qilamiz.</p>
+
+          <div class="suggestions">
+            <button class="suggestion" type="button" data-prompt="JavaScript'da oddiy funksiya misolini ko'rsat va tushuntir">
+              <strong>Kod yozish</strong>
+              <span>JavaScript funksiya namunasi</span>
+            </button>
+            <button class="suggestion" type="button" data-prompt="Qisqa va ravon xabar yozishga yordam ber">
+              <strong>Matn yozish</strong>
+              <span>Xabarni qisqa va ravon qilish</span>
+            </button>
+            <button class="suggestion" type="button" data-prompt="Mahalliy xizmat ko'rsatish uchun 5 ta startup g'oyasi taklif qil">
+              <strong>G'oyalar</strong>
+              <span>Startup uchun 5 ta g'oya</span>
+            </button>
+            <button class="suggestion" type="button" data-prompt="Murakkab mavzuni sodda tilda tushuntirib ber">
+              <strong>Tushuntirish</strong>
+              <span>Murakkab mavzu — sodda tilda</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="messages" id="messages" hidden></section>
+    </div>
+
+    <div class="composer-wrap">
+      <form class="composer" id="composer" autocomplete="off">
+        <textarea id="input" rows="1" placeholder="Xabar yozing..." aria-label="Xabar"></textarea>
+
+        <button type="submit" class="send-btn" id="send" aria-label="Yuborish">
+          <svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+        </button>
+
+        <button type="button" class="stop-btn" id="stop" aria-label="To'xtatish" hidden>
+          <svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2" /></svg>
+        </button>
+      </form>
+      <p class="disclaimer">ChatGPT demo — xato qilishi mumkin. Muhim ma'lumotlarni tekshiring.</p>
+    </div>
+  </main>
+</div>
+
+<!-- ============ SETTINGS ============ -->
+<dialog class="settings" id="settings" aria-labelledby="settings-title">
+  <form id="settings-form" method="dialog">
+    <header class="settings-head">
+      <h2 id="settings-title">Sozlamalar</h2>
+      <button class="icon-btn" id="settings-close" type="button" aria-label="Yopish">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </header>
+
+    <p class="settings-note">
+      Haqiqiy javoblar uchun API kalit kiriting. Kalit faqat shu brauzer sessiyasida saqlanadi
+      va tanlagan API manzilingizga yuboriladi.
+    </p>
+
+    <label class="field">
+      <span>API kalit</span>
+      <input id="cfg-key" type="password" placeholder="sk-..." autocomplete="off" spellcheck="false" />
+    </label>
+
+    <label class="field">
+      <span>API manzil</span>
+      <input id="cfg-base" type="url" placeholder="https://api.openai.com/v1" spellcheck="false" />
+      <small>OpenAI, Groq, OpenRouter yoki Ollama: http://localhost:11434/v1</small>
+    </label>
+
+    <label class="field">
+      <span>Model</span>
+      <input id="cfg-model" type="text" placeholder="gpt-4o-mini" spellcheck="false" />
+    </label>
+
+    <div class="settings-actions">
+      <button class="btn-ghost" id="cfg-clear" type="button">Kalitni tozalash</button>
+      <button class="btn-primary" type="submit">Saqlash</button>
+    </div>
+
+    <p class="settings-status" id="cfg-status"></p>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

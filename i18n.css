@@ -1,0 +1,53 @@
+/* MahallaUsta — shared language switcher styles */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(9, 61, 38, 0.12);
+  border-radius: 999px;
+  background: rgba(9, 61, 38, 0.04);
+}
+
+.lang-switch button {
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  padding: 5px 8px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #5d7168;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.lang-switch button:hover { color: #0a6b42; }
+.lang-switch button.active { background: #0d7a4a; color: #fff; }
+
+.lang-switch--dark {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lang-switch--dark button { color: #9fb0a7; }
+.lang-switch--dark button:hover { color: #e8f5ee; }
+.lang-switch--dark button.active { background: #22b573; color: #06231a; }
+
+.lang-switch--mobile { align-self: flex-start; }
+
+.login-lang {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 20;
+}
+
+@media (max-width: 560px) {
+  .login-lang { top: 16px; right: 18px; }
+}
+
+@media (max-width: 520px) {
+  .topbar-actions .lang-switch { display: none; }
+}

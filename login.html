@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="uz" data-title="meta.login">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kirish — MahallaUsta boshqaruv paneli</title>
+  <meta name="description" content="MahallaUsta boshqaruv paneliga kirish." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%230D7A4A'/%3E%3Cpath d='M20 9.5 31 18.5v10.5a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V18.5L20 9.5Z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M17 31v-6h6v6' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="i18n.css" />
+</head>
+<body class="login-page">
+
+  <div class="login-bg" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+    <span class="grid-lines"></span>
+  </div>
+
+  <div class="lang-switch lang-switch--dark login-lang" data-lang-switch></div>
+
+  <a class="back-link" href="index.html">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
+    <span data-i18n="login.back">Bosh sahifa</span>
+  </a>
+
+  <main class="login-shell">
+    <section class="login-brand">
+      <div class="brand-row">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#22B573" />
+              <stop offset="1" stop-color="#07492D" />
+            </linearGradient>
+          </defs>
+          <rect width="40" height="40" rx="11" fill="url(#brandGrad)" />
+          <path d="M20 9.5 31 18.5v10.5a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V18.5L20 9.5Z" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" />
+          <path d="M17 31v-6h6v6" fill="none" stroke="#fff" stroke-width="2.4" />
+        </svg>
+        <span class="brand-name">Mahalla<span>Usta</span></span>
+        <span class="mode-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z" /></svg>
+          <span data-i18n="login.nightMode">Kechki rejim</span>
+        </span>
+      </div>
+
+      <h1 data-i18n-html="login.titleHtml">Boshqaruv markazi — <span class="hl">bir joyda</span>.</h1>
+      <p class="brand-lead" data-i18n="login.lead">
+        Buyurtmalar, ustalar va mijozlar nazorati. AI yordamchi esa har bir
+        qarorni tezroq qabul qilishga yordam beradi.
+      </p>
+
+      <ul class="login-features">
+        <li>
+          <span class="feat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16" /><path d="M8 15v-4M12 15V7M16 15v-6M20 15V9" /></svg>
+          </span>
+          <span><strong data-i18n="login.f1">Jonli statistika</strong><small data-i18n="login.f1Sub">Buyurtmalar va daromad real vaqtda</small></span>
+        </li>
+        <li>
+          <span class="feat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4L12 3Z" /><path d="M18.5 15.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z" /></svg>
+          </span>
+          <span><strong data-i18n="login.f2">AI yordamchi</strong><small data-i18n="login.f2Sub">Buyurtmalar bo'yicha aqlli suhbat</small></span>
+        </li>
+        <li>
+          <span class="feat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5-4-1.3-7-5-7-9.5V6l7-3Z" /><path d="M9 12l2 2 4-4" /></svg>
+          </span>
+          <span><strong data-i18n="login.f3">Xavfsiz kirish</strong><small data-i18n="login.f3Sub">Faqat tasdiqlangan administratorlar uchun</small></span>
+        </li>
+      </ul>
+
+      <div class="brand-stats">
+        <div><strong>1 248</strong><span data-i18n="login.statOrders">oylik buyurtma</span></div>
+        <div><strong>342</strong><span data-i18n="login.statMasters">faol usta</span></div>
+        <div><strong>4.9 <span class="stat-star">★</span></strong><span data-i18n="login.statRating">mijoz bahosi</span></div>
+      </div>
+    </section>
+
+    <section class="login-card">
+      <div class="card-glow" aria-hidden="true"></div>
+      <span class="lock-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10" rx="2.5" /><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" /><circle cx="12" cy="15.5" r="1.6" /></svg>
+      </span>
+      <h2 data-i18n="login.welcome">Xush kelibsiz</h2>
+      <p class="card-sub" data-i18n="login.welcomeSub">Boshqaruv paneliga kirish uchun ma'lumotlaringizni kiriting.</p>
+
+      <form id="login-form" novalidate>
+        <div class="form-row">
+          <label for="login-email" data-i18n="login.emailLabel">Email yoki telefon</label>
+          <div class="input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" /><path d="m4 7 8 6 8-6" /></svg>
+            <input id="login-email" name="email" type="text" placeholder="admin@mahallausta.uz" autocomplete="username" spellcheck="false" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="login-password" data-i18n="login.passwordLabel">Parol</label>
+          <div class="input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10" rx="2.5" /><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" /></svg>
+            <input id="login-password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+            <button class="pw-toggle" type="button" id="pw-toggle" aria-label="Parolni ko'rsatish" data-i18n-aria="aria.showPassword" aria-pressed="false">
+              <svg class="eye-open" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="3" /></svg>
+              <svg class="eye-closed" viewBox="0 0 24 24" hidden><path d="M3 3l18 18" /><path d="M10.6 6.2A9.8 9.8 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-3.1 3.8M6.6 7.7A16 16 0 0 0 2.5 12S6 18 12 18c1 0 2-.2 2.9-.5" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="check">
+            <input type="checkbox" id="remember" checked />
+            <span class="box" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+            </span>
+            <span data-i18n="login.remember">Meni eslab qol</span>
+          </label>
+          <a href="#" class="forgot" data-i18n="login.forgot">Parolni unutdingizmi?</a>
+        </div>
+
+        <p class="form-error" id="login-error" role="alert" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 8v5M12 16.5v.1" /></svg>
+          <span data-i18n="login.error">Email yoki parol noto'g'ri. Demo hisobdan foydalanib ko'ring.</span>
+        </p>
+
+        <button class="btn-login" type="submit" id="login-submit">
+          <span data-i18n="login.submit">Kirish</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </button>
+
+        <div class="divider"><span data-i18n="login.or">yoki</span></div>
+
+        <button class="btn-demo" type="button" id="demo-login">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4L12 3Z" /></svg>
+          <span data-i18n="login.demo">Demo hisob bilan kirish</span>
+        </button>
+      </form>
+
+      <p class="demo-note">
+        Demo: <code>admin@mahallausta.uz</code> <span>·</span> <code>admin123</code>
+      </p>
+    </section>
+  </main>
+
+  <footer class="login-footer">
+    <span>© 2026 MahallaUsta</span>
+    <span class="dot">·</span>
+    <a href="#" data-i18n="login.footerPrivacy">Maxfiylik siyosati</a>
+    <span class="dot">·</span>
+    <a href="#" data-i18n="login.footerHelp">Yordam</a>
+  </footer>
+
+  <script src="i18n.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>
