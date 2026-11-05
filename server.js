@@ -171,6 +171,7 @@ async function handleApi(req, res, url) {
     const maxAge = remember ? REMEMBER_MS : SESSION_MS;
     const token = store.createToken(user, maxAge);
 
+    store.touchLogin(user);
     res.setHeader("Set-Cookie", sessionCookie(token, remember ? maxAge / 1000 : null));
     return sendJson(res, 200, { ok: true, user: store.publicUser(user) });
   }
@@ -195,8 +196,61 @@ async function handleApi(req, res, url) {
       orders: db.orders,
       masters: db.masters,
       clients: db.clients,
+      subscriptions: db.subscriptions,
       stats: db.stats,
     });
+  }
+
+  if (route === "GET /api/profile") {
+    const user = currentUser(req);
+    if (!user) return sendJson(res, 401, { error: "unauthorized" });
+
+    return sendJson(res, 200, { user: store.publicUser(user), profile: store.getProfile(user) });
+  }
+
+  if (route === "POST /api/profile") {
+    const user = currentUser(req);
+    if (!user) return sendJson(res, 401, { error: "unauthorized" });
+
+    const body = await readJson(req);
+
+    const name = clean(body.name, 60);
+    const email = clean(body.email, 80).toLowerCase();
+    const phone = clean(body.phone, 24).replace(/\D/g, "");
+    const district = clean(body.district, 40);
+
+    if (name.length < 3) return sendJson(res, 400, { error: "invalid_name" });
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(email)) return sendJson(res, 400, { error: "invalid_email" });
+    if (phone.length !== 12) return sendJson(res, 400, { error: "invalid_phone" });
+    if (district.length < 2) return sendJson(res, 400, { error: "invalid_district" });
+
+    const result = store.updateProfile(user, {
+      name,
+      email,
+      phone,
+      district,
+      notifySms: Boolean(body.notifySms),
+      notifyPush: Boolean(body.notifyPush),
+    });
+
+    if (result.error) return sendJson(res, 409, { error: result.error });
+    return sendJson(res, 200, result);
+  }
+
+  if (route === "POST /api/profile/password") {
+    const user = currentUser(req);
+    if (!user) return sendJson(res, 401, { error: "unauthorized" });
+
+    const body = await readJson(req);
+    const result = store.changePassword(user, String(body.current || ""), String(body.next || ""));
+
+    if (result.error) return sendJson(res, 400, { error: result.error });
+
+    const remember = Boolean(body.remember);
+    const token = store.createToken(user, remember ? REMEMBER_MS : SESSION_MS);
+    res.setHeader("Set-Cookie", sessionCookie(token, remember ? REMEMBER_MS / 1000 : null));
+
+    return sendJson(res, 200, { ok: true });
   }
 
   if (route === "POST /api/chat") {
@@ -219,22 +273,27 @@ async function handleApi(req, res, url) {
     const service = clean(body.service, 60);
     const district = clean(body.district, 60);
     const master = clean(body.master, 60);
-    const kind = body.kind === "master" ? "master" : "request";
+    const plan = store.PLANS[body.plan] && body.plan !== "standart" ? body.plan : "";
+    const billing = body.billing === "yearly" ? "yearly" : "monthly";
+    const kind = ["master", "subscription"].includes(body.kind) ? body.kind : "request";
 
     if (
       name.length < 2 ||
       district.length < 2 ||
-      !service ||
-      phone.replace(/\D/g, "").length !== 12
+      phone.replace(/\D/g, "").length !== 12 ||
+      (kind === "subscription" ? !plan : !service)
     ) {
       return sendJson(res, 400, { error: "invalid_input" });
     }
 
-    const result = store.addRequest({ kind, name, phone, service, district, master });
+    const result = store.addRequest({ kind, name, phone, service, district, master, plan, billing });
+    const record = result.order || result.subscription || null;
+
     return sendJson(res, 201, {
       ok: true,
       kind: result.kind,
-      id: result.order ? result.order.id : null,
+      id: record ? record.id : null,
+      plan: record && record.plan ? record.plan : null,
     });
   }
 

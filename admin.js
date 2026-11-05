@@ -96,12 +96,26 @@
   ];
 
   const DEMO_MASTERS = [
-    { name: "Aziz Karimov", spec: "Santexnik", district: "Chilonzor", rating: 4.9, jobs: 128, status: "active" },
-    { name: "Dilnoza Yusupova", spec: "Bo'yoqchi", district: "Yunusobod", rating: 5.0, jobs: 96, status: "active" },
-    { name: "Sardor Toshmatov", spec: "Elektrik", district: "Mirzo Ulug'bek", rating: 4.8, jobs: 211, status: "busy" },
-    { name: "Rustam Qodirov", spec: "Duradgor", district: "Sergeli", rating: 4.7, jobs: 74, status: "active" },
-    { name: "Bekzod Umarov", spec: "Konditsioner ustasi", district: "Yakkasaroy", rating: 4.9, jobs: 163, status: "active" },
+    { name: "Aziz Karimov", spec: "Santexnik", district: "Chilonzor", rating: 4.9, jobs: 128, status: "active", plan: "pro" },
+    { name: "Dilnoza Yusupova", spec: "Bo'yoqchi", district: "Yunusobod", rating: 5.0, jobs: 96, status: "active", plan: "pro" },
+    { name: "Sardor Toshmatov", spec: "Elektrik", district: "Mirzo Ulug'bek", rating: 4.8, jobs: 211, status: "busy", plan: "biznes" },
+    { name: "Rustam Qodirov", spec: "Duradgor", district: "Sergeli", rating: 4.7, jobs: 74, status: "active", plan: "standart" },
+    { name: "Bekzod Umarov", spec: "Konditsioner ustasi", district: "Yakkasaroy", rating: 4.9, jobs: 163, status: "active", plan: "pro" },
   ];
+
+  const DEMO_SUBSCRIPTIONS = [
+    { id: "SUB-241", name: "Aziz Karimov", phone: "+998 90 123 45 67", plan: "pro", billing: "yearly", price: 79000, district: "Chilonzor", status: "active", time: "09:41", date: "04.11.2026" },
+    { id: "SUB-240", name: "Bekzod Umarov", phone: "+998 90 987 65 43", plan: "pro", billing: "monthly", price: 99000, district: "Yakkasaroy", status: "active", time: "08:26", date: "03.11.2026" },
+    { id: "SUB-239", name: "Sardor Toshmatov", phone: "+998 91 234 56 78", plan: "biznes", billing: "monthly", price: 249000, district: "Mirzo Ulug'bek", status: "active", time: "19:05", date: "02.11.2026" },
+    { id: "SUB-238", name: "Dilnoza Yusupova", phone: "+998 97 700 88 21", plan: "pro", billing: "monthly", price: 99000, district: "Yunusobod", status: "trial", time: "12:33", date: "01.11.2026" },
+    { id: "SUB-237", name: "Rustam Qodirov", phone: "+998 88 909 11 22", plan: "standart", billing: "monthly", price: 0, district: "Sergeli", status: "canceled", time: "11:12", date: "29.10.2026" },
+  ];
+
+  const DEMO_PLANS = {
+    standart: { monthly: 0, yearly: 0, commission: 12 },
+    pro: { monthly: 99000, yearly: 79000, commission: 8 },
+    biznes: { monthly: 249000, yearly: 199000, commission: 5 },
+  };
 
   const DEMO_CLIENTS = [
     { name: "Nilufar Rahimova", phone: "+998 90 123 45 67", orders: 12, last: "27.10.2026", status: "active" },
@@ -129,6 +143,11 @@
     revenue: 128400000,
     revenueGrowth: 15.2,
     repeatRate: 64,
+    proSubscribers: 96,
+    proGrowth: 18.4,
+    bizSubscribers: 14,
+    planMrr: 12990000,
+    planConversion: 3.4,
   };
 
   function readLocalSession() {
@@ -145,6 +164,7 @@
   let orders = [];
   let masters = [];
   let clients = [];
+  let subscriptions = [];
   let stats = {};
   let offlineMode = false;
 
@@ -154,6 +174,7 @@
 
     const data = await api("/api/data");
     ({ orders, masters, clients, stats } = data);
+    subscriptions = data.subscriptions || [];
   } catch (error) {
     if (error.message === "unauthorized") return;
 
@@ -173,6 +194,7 @@
     orders = DEMO_ORDERS;
     masters = DEMO_MASTERS;
     clients = DEMO_CLIENTS;
+    subscriptions = DEMO_SUBSCRIPTIONS;
     stats = DEMO_STATS;
     showToast(t("admin.toast.demo"));
   }
@@ -229,6 +251,20 @@
     const clientsChip = $("#clients-chip");
     if (clientsChip) clientsChip.textContent = t("admin.clients.chip", { n: formatPrice(stats.clientsTotal) });
 
+    const planKpi = (name) => document.querySelector(`[data-plan-kpi="${name}"]`);
+    if (planKpi("pro")) planKpi("pro").textContent = formatPrice(stats.proSubscribers);
+    if (planKpi("biznes")) planKpi("biznes").textContent = formatPrice(stats.bizSubscribers);
+    if (planKpi("mrr")) {
+      planKpi("mrr").innerHTML = `${(stats.planMrr / 1e6).toFixed(1)} <small>${t("common.million")}</small>`;
+    }
+    if (planKpi("conv")) planKpi("conv").textContent = `${stats.planConversion}%`;
+
+    const proGrowth = $("#plan-pro-growth");
+    if (proGrowth) proGrowth.textContent = `+${stats.proGrowth}%`;
+
+    const plansCount = $("#plans-count");
+    if (plansCount) plansCount.textContent = formatPrice(subscriptions.length);
+
     const dateLabel = $("#today-label");
     if (dateLabel) {
       dateLabel.textContent = t("admin.date", {
@@ -268,6 +304,42 @@
     tbody.innerHTML = list.map(orderRow).join("");
   }
 
+  function subscriptionRow(sub) {
+    const statusClass =
+      sub.status === "active" ? "st-done" : sub.status === "trial" ? "st-progress" : "st-canceled";
+    const plan = sub.plan || "standart";
+
+    return `
+      <tr>
+        <td class="cell-id">#${sub.id}</td>
+        <td>
+          <span class="cell-user">
+            <span class="mini-avatar">${initials(sub.name)}</span>
+            <span class="cell-strong">${sub.name}</span>
+          </span>
+        </td>
+        <td><span class="plan-badge plan-badge--${plan}">${t(`plan.${plan}.name`)}</span></td>
+        <td>${t(sub.billing === "yearly" ? "pricing.yearly" : "pricing.monthly")}</td>
+        <td class="cell-amount">${formatPrice(sub.price)} <span class="cell-muted">${t("common.currency")}</span></td>
+        <td>${sub.date}</td>
+        <td><span class="status ${statusClass}">${t(`status.${sub.status}`)}</span></td>
+      </tr>`;
+  }
+
+  function renderPlans() {
+    const body = $("#plans-body");
+    if (!body) return;
+
+    const list =
+      currentPlanFilter === "all"
+        ? subscriptions
+        : subscriptions.filter((sub) => sub.plan === currentPlanFilter);
+
+    body.innerHTML = list.length
+      ? list.map(subscriptionRow).join("")
+      : `<tr><td class="cell-empty" colspan="7">${t("admin.plans.empty")}</td></tr>`;
+  }
+
   function renderTables() {
     renderOrders(orders.slice(0, 5), $("#recent-orders"));
 
@@ -288,6 +360,7 @@
         <td>${localizeEnum("district", m.district)}</td>
         <td class="cell-rating">★ ${m.rating.toFixed(1)}</td>
         <td>${formatPrice(m.jobs)}</td>
+        <td><span class="plan-badge plan-badge--${m.plan || "standart"}">${t(`plan.${m.plan || "standart"}.name`)}</span></td>
         <td><span class="status ${m.status === "active" ? "st-done" : "st-progress"}">${t(`status.${m.status}`)}</span></td>
       </tr>`
       )
@@ -315,10 +388,12 @@
   function renderAll() {
     renderStats();
     renderTables();
+    renderPlans();
   }
 
   /* ---------- Order filters ---------- */
   let currentFilter = "all";
+  let currentPlanFilter = "all";
   const filterChips = $$("#order-filters .chip");
   filterChips.forEach((chip) => {
     chip.addEventListener("click", () => {
@@ -333,12 +408,24 @@
     });
   });
 
+  /* ---------- Plan filters ---------- */
+  const planFilterChips = $$("#plan-filters .chip");
+  planFilterChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      planFilterChips.forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentPlanFilter = chip.dataset.planFilter;
+      renderPlans();
+    });
+  });
+
   /* ---------- View switching ---------- */
   const viewMeta = {
     dashboard: { title: "admin.view.dashboardTitle", sub: "admin.view.dashboardSub" },
     orders: { title: "admin.view.ordersTitle", sub: "admin.view.ordersSub" },
     masters: { title: "admin.view.mastersTitle", sub: "admin.view.mastersSub" },
     clients: { title: "admin.view.clientsTitle", sub: "admin.view.clientsSub" },
+    plans: { title: "admin.view.plansTitle", sub: "admin.view.plansSub" },
     ai: { title: "admin.view.aiTitle", sub: "admin.view.aiSub" },
     settings: { title: "admin.view.settingsTitle", sub: "admin.view.settingsSub" },
   };
@@ -553,6 +640,51 @@
 
       if (!lines.length) return r("problemNone");
       return `${r("problemHeader", { n: lines.length })}\n${lines.join("\n")}\n\n${r("problemTail")}`;
+    }
+
+    if (/(tarif|obun|biznes|\bpro|тариф|подписк|прайс|бизнес|subscription|pricing|tier|business)/.test(text)) {
+      const names = {
+        standart: t("plan.standart.name"),
+        pro: t("plan.pro.name"),
+        biznes: t("plan.biznes.name"),
+      };
+      const subs = {
+        standart: Math.max(s.mastersActive - s.proSubscribers - s.bizSubscribers, 0),
+        pro: s.proSubscribers,
+        biznes: s.bizSubscribers,
+      };
+      const price = (value) => (value ? `${formatPrice(value)} ${t("admin.aiReply.plansCurrency")}` : t("admin.aiReply.plansFree"));
+      const requests = subscriptions.filter((x) => x.status !== "canceled").slice(0, 3);
+
+      const lines = Object.keys(DEMO_PLANS).map((key) => {
+        const plan = DEMO_PLANS[key];
+        return r(plan.monthly ? "plansLine" : "plansFreeLine", {
+          name: names[key],
+          monthly: price(plan.monthly),
+          yearly: plan.yearly ? price(plan.yearly) : "\u2014",
+          commission: plan.commission,
+          subs: formatPrice(subs[key]),
+        });
+      });
+
+      const billingWord = (value) =>
+        value === "yearly" ? t("admin.aiReply.billingYearly") : t("admin.aiReply.billingMonthly");
+
+      return [
+        r("plansTitle"),
+        lines.join("\n"),
+        "",
+        r("plansMrr", { mrr: formatPrice(s.planMrr), conv: s.planConversion }),
+        requests.length
+          ? r("plansLatest", {
+              list: requests
+                .map((x) => `${x.name} \u2014 ${names[x.plan] || x.plan}, ${billingWord(x.billing)}`)
+                .join(", "),
+            })
+          : r("plansNoLatest"),
+        "",
+        r("plansTail"),
+      ].join("\n");
     }
 
     if (/(buyurtma|order|so'rov|statistika|заказ|статистик)/.test(text)) {

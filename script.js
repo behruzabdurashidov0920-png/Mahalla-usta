@@ -90,6 +90,7 @@
 
   document.addEventListener("mu:langchange", () => {
     counters.forEach((el) => (el.textContent = formatNumber(Number(el.dataset.count || 0))));
+    renderPrices();
   });
 
   /* ---------- Toast ---------- */
@@ -103,6 +104,31 @@
     toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
   }
 
+  /* ---------- Billing period + plan prices ---------- */
+  const billingButtons = Array.from(document.querySelectorAll(".bt"));
+  const priceNodes = Array.from(document.querySelectorAll("[data-monthly]"));
+  let currentBilling = "monthly";
+
+  function renderPrices() {
+    priceNodes.forEach((node) => {
+      node.textContent = formatNumber(Number(node.dataset[currentBilling]));
+    });
+  }
+
+  billingButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentBilling = btn.dataset.billing;
+      billingButtons.forEach((other) => {
+        const active = other === btn;
+        other.classList.toggle("active", active);
+        other.setAttribute("aria-pressed", String(active));
+      });
+      renderPrices();
+    });
+  });
+
+  renderPrices();
+
   /* ---------- Modal ---------- */
   const modal = document.getElementById("modal");
   const modalFormView = document.getElementById("modal-form-view");
@@ -113,12 +139,23 @@
   const serviceSelect = document.getElementById("client-service");
   const districtInput = document.getElementById("client-district");
   const phoneInput = document.getElementById("client-phone");
+  const serviceRow = serviceSelect.closest(".form-row");
 
   let lastFocused = null;
   let activeMaster = "";
+  let activePlan = "";
   let activeKind = "request";
 
   function refreshModalCopy() {
+    if (activeKind === "subscription") {
+      const planName = t(`plan.${activePlan}.name`);
+      const amountNode = document.querySelector(`[data-plan-id="${activePlan}"] .amount`);
+      const price = formatNumber(Number(amountNode?.dataset[currentBilling] ?? 0));
+      modalTitle.textContent = t("modal.planTitle", { plan: planName });
+      modalSub.textContent = t("modal.planSub", { plan: planName, price });
+      return;
+    }
+
     if (activeKind === "master") {
       modalTitle.textContent = t("modal.masterTitle");
       modalSub.textContent = t("modal.masterSub");
@@ -131,13 +168,18 @@
       : t("modal.callSub");
   }
 
-  function setFormMode({ preset, master, district }) {
+  function setFormMode({ preset, master, district, plan }) {
     requestForm.reset();
     modalFormView.hidden = false;
     modalSuccessView.hidden = true;
 
     activeMaster = master || "";
-    activeKind = preset === "usta" ? "master" : "request";
+    activePlan = plan || "";
+    activeKind = plan ? "subscription" : preset === "usta" ? "master" : "request";
+
+    const subscribing = activeKind === "subscription";
+    serviceRow.hidden = subscribing;
+    serviceSelect.required = !subscribing;
 
     refreshModalCopy();
 
@@ -151,10 +193,10 @@
 
   function openModal(trigger) {
     lastFocused = document.activeElement;
-    const { preset, master } = trigger.dataset;
+    const { preset, master, plan } = trigger.dataset;
     const district = document.getElementById("quick-district").value.trim();
 
-    setFormMode({ preset, master, district: preset ? "" : district });
+    setFormMode({ preset, master, plan, district: preset || plan ? "" : district });
 
     modal.hidden = false;
     document.body.style.overflow = "hidden";
@@ -242,6 +284,8 @@
           service: serviceSelect.value,
           district: districtInput.value,
           master: activeMaster,
+          plan: activePlan,
+          billing: currentBilling,
         }),
       });
 

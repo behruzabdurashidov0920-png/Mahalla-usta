@@ -38,6 +38,7 @@
       <nav class="nav" id="nav" aria-label="Asosiy menyu">
         <a href="#services" data-i18n="nav.services">Xizmatlar</a>
         <a href="#masters" data-i18n="nav.masters">Ustalar</a>
+        <a href="#pricing" data-i18n="nav.pricing">Tariflar</a>
         <a href="#how" data-i18n="nav.how">Qanday ishlaydi</a>
         <a href="#why" data-i18n="nav.why">Nega biz</a>
         <a href="login.html" data-i18n="nav.login">Kirish</a>
@@ -296,6 +297,7 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5-4-1.3-7-5-7-9.5V6l7-3Z" /><path d="M9 12l2 2 4-4" /></svg>
                 <span data-i18n="masters.verified">Tekshirilgan</span>
               </span>
+              <span class="plan-badge plan-badge--pro">Pro</span>
             </div>
             <h3>Aziz Karimov</h3>
             <p class="master-role" data-i18n="master.azizRole">Santexnik · 9 yillik tajriba</p>
@@ -324,6 +326,7 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5-4-1.3-7-5-7-9.5V6l7-3Z" /><path d="M9 12l2 2 4-4" /></svg>
                 <span data-i18n="masters.verified">Tekshirilgan</span>
               </span>
+              <span class="plan-badge plan-badge--pro">Pro</span>
             </div>
             <h3>Dilnoza Yusupova</h3>
             <p class="master-role" data-i18n="master.dilnozaRole">Bo'yoqchi · 6 yillik tajriba</p>
@@ -352,6 +355,7 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5-4-1.3-7-5-7-9.5V6l7-3Z" /><path d="M9 12l2 2 4-4" /></svg>
                 <span data-i18n="masters.verified">Tekshirilgan</span>
               </span>
+              <span class="plan-badge plan-badge--biznes">Biznes</span>
             </div>
             <h3>Sardor Toshmatov</h3>
             <p class="master-role" data-i18n="master.sardorRole">Elektrik · 11 yillik tajriba</p>
@@ -373,6 +377,80 @@
             </div>
           </article>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section class="section section-tint" id="pricing">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="pricing.eyebrow">Tariflar</p>
+          <h2 data-i18n="pricing.title">Ustalar uchun tariflar</h2>
+          <p class="section-sub" data-i18n="pricing.sub">Standart bepul — Pro esa ko'proq buyurtma, tezroq javob va pastroq komissiya beradi.</p>
+        </div>
+
+        <div class="billing-toggle reveal" role="group" aria-label="To'lov davri" data-i18n-aria="aria.billing">
+          <button type="button" class="bt active" data-billing="monthly" aria-pressed="true" data-i18n="pricing.monthly">Oylik</button>
+          <button type="button" class="bt" data-billing="yearly" aria-pressed="false">
+            <span data-i18n="pricing.yearly">Yillik</span>
+            <span class="bt-save" data-i18n="pricing.save">−20%</span>
+          </button>
+        </div>
+
+        <div class="plan-grid">
+          <article class="plan reveal" data-plan-id="standart">
+            <h3 class="plan-name" data-i18n="plan.standart.name">Standart</h3>
+            <p class="plan-desc" data-i18n="plan.standart.desc">Boshlash uchun yetarli — to'lov yo'q.</p>
+            <p class="plan-price">
+              <span class="amount" data-monthly="0" data-yearly="0">0</span>
+              <small data-i18n="pricing.perMonth">so'm / oy</small>
+            </p>
+            <ul class="plan-list">
+              <li data-i18n="plan.standart.f1">Oyiga 12 tagacha buyurtma</li>
+              <li data-i18n="plan.standart.f2">Mahalla doirasida ko'rinish</li>
+              <li data-i18n="plan.standart.f3">12% platforma komissiyasi</li>
+              <li data-i18n="plan.standart.f4">Email orqali qo'llab-quvvatlash</li>
+            </ul>
+            <button class="btn btn-ghost btn-block" data-open-modal data-plan="standart" data-i18n="plan.standart.cta">Bepul boshlash</button>
+          </article>
+
+          <article class="plan plan--pro reveal" data-plan-id="pro">
+            <span class="plan-flag" data-i18n="pricing.popular">Mashhur</span>
+            <h3 class="plan-name" data-i18n="plan.pro.name">Pro</h3>
+            <p class="plan-desc" data-i18n="plan.pro.desc">Doimiy buyurtma olmoqchi bo'lgan usta uchun.</p>
+            <p class="plan-price">
+              <span class="amount" data-monthly="99000" data-yearly="79000">99 000</span>
+              <small data-i18n="pricing.perMonth">so'm / oy</small>
+            </p>
+            <p class="plan-note" data-i18n="plan.pro.trial">Birinchi 14 kun bepul</p>
+            <ul class="plan-list">
+              <li data-i18n="plan.pro.f1">Cheksiz buyurtma</li>
+              <li data-i18n="plan.pro.f2">Qidiruvda tepaga ko'tarilish</li>
+              <li data-i18n="plan.pro.f3">Yangi buyurtmalar haqida bildirishnoma</li>
+              <li data-i18n="plan.pro.f4">8% komissiya va reyting tahlili</li>
+              <li data-i18n="plan.pro.f5">24/7 telefon orqali yordam</li>
+            </ul>
+            <button class="btn btn-light btn-block" data-open-modal data-plan="pro" data-i18n="plan.pro.cta">Proga obuna bo'lish</button>
+          </article>
+
+          <article class="plan reveal" data-plan-id="biznes">
+            <h3 class="plan-name" data-i18n="plan.biznes.name">Biznes</h3>
+            <p class="plan-desc" data-i18n="plan.biznes.desc">Jamoa bilan ishlaydigan ustalar va korxonalar uchun.</p>
+            <p class="plan-price">
+              <span class="amount" data-monthly="249000" data-yearly="199000">249 000</span>
+              <small data-i18n="pricing.perMonth">so'm / oy</small>
+            </p>
+            <ul class="plan-list">
+              <li data-i18n="plan.biznes.f1">5 tagacha usta — bitta profil</li>
+              <li data-i18n="plan.biznes.f2">Buyurtmani jamoa ichida taqsimlash</li>
+              <li data-i18n="plan.biznes.f3">5% komissiya</li>
+              <li data-i18n="plan.biznes.f4">Shaxsiy menejer va oylik hisobot</li>
+            </ul>
+            <button class="btn btn-ghost btn-block" data-open-modal data-plan="biznes" data-i18n="plan.biznes.cta">Biznes tarifini tanlash</button>
+          </article>
+        </div>
+
+        <p class="plans-footnote reveal" data-i18n="pricing.footnote">Tarifni istalgan payt almashtirish mumkin — yillik to'lovda 20% tejaysiz.</p>
       </div>
     </section>
 
@@ -485,6 +563,7 @@
         <h3 data-i18n="footer.platform">Platforma</h3>
         <a href="#services" data-i18n="nav.services">Xizmatlar</a>
         <a href="#masters" data-i18n="nav.masters">Ustalar</a>
+        <a href="#pricing" data-i18n="nav.pricing">Tariflar</a>
         <a href="#how" data-i18n="nav.how">Qanday ishlaydi</a>
         <a href="#why" data-i18n="nav.why">Nega biz</a>
         <a href="login.html" data-i18n="nav.login">Kirish</a>

@@ -17,22 +17,36 @@
 
   let errorKey = "login.error";
 
-  /* ---------- Offline demo account ---------- */
-  const DEMO_EMAIL = "admin@mahallausta.uz";
-  const DEMO_PHONE = "998901234567";
-  const DEMO_PASSWORD = "admin123";
+  /* ---------- Entry point by role ---------- */
+  const homeFor = (role) => (role === "Administrator" ? "admin.html" : "profile.html");
 
-  function demoSignIn(login, password) {
+  /* ---------- Offline demo accounts ---------- */
+  const DEMO_ACCOUNTS = [
+    { login: "admin@mahallausta.uz", phone: "998901234567", password: "admin123", name: "Bekzod Admin", role: "Administrator" },
+    { login: "usta@mahallausta.uz", phone: "998905550102", password: "usta123", name: "Aziz Karimov", role: "Usta" },
+  ];
+
+  function matchDemo(login, password) {
     const value = login.trim().toLowerCase();
     const digits = value.replace(/\D/g, "");
-    const valid = (value === DEMO_EMAIL || digits === DEMO_PHONE) && password === DEMO_PASSWORD;
 
-    if (!valid) return false;
+    return (
+      DEMO_ACCOUNTS.find(
+        (account) =>
+          account.password === password &&
+          (account.login === value || account.phone === digits)
+      ) || null
+    );
+  }
+
+  function demoAccount(login, password) {
+    const account = matchDemo(login, password);
+    if (!account) return false;
 
     const session = JSON.stringify({
-      name: "Bekzod Admin",
-      email: DEMO_EMAIL,
-      role: "Administrator",
+      name: account.name,
+      email: account.login,
+      role: account.role,
       loginAt: new Date().toISOString(),
     });
 
@@ -47,7 +61,7 @@
       }
     }
 
-    return true;
+    return account;
   }
 
   /* ---------- Password visibility ---------- */
@@ -126,7 +140,8 @@
       }
 
       if (response.ok) {
-        window.location.href = "admin.html";
+        const data = await response.json().catch(() => null);
+        window.location.href = homeFor(data && data.user ? data.user.role : "Administrator");
         return;
       }
 
@@ -140,8 +155,9 @@
       /* server yo'q — demo rejimda davom etamiz */
     }
 
-    if (demoSignIn(login, password)) {
-      window.location.href = "admin.html";
+    const account = demoAccount(login, password);
+    if (account) {
+      window.location.href = homeFor(account.role);
       return;
     }
 

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="uz" data-title="meta.profile">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    try {
+      document.documentElement.dataset.theme =
+        window.localStorage.getItem("mu_theme") === "light" ? "light" : "dark";
+    } catch (error) {
+      document.documentElement.dataset.theme = "dark";
+    }
+  </script>
+  <title>Profil — MahallaUsta</title>
+  <meta name="description" content="MahallaUsta foydalanuvchi profili." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%230D7A4A'/%3E%3Cpath d='M20 9.5 31 18.5v10.5a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V18.5L20 9.5Z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M17 31v-6h6v6' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="profile.css" />
+  <link rel="stylesheet" href="i18n.css" />
+</head>
+<body class="profile-page">
+
+  <header class="topbar pf-topbar">
+    <a class="sidebar-brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="11" fill="#0D7A4A" />
+        <path d="M20 9.5 31 18.5v10.5a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V18.5L20 9.5Z" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M17 31v-6h6v6" fill="none" stroke="#fff" stroke-width="2.4" />
+      </svg>
+      <span>Mahalla<span class="accent">Usta</span></span>
+    </a>
+
+    <div class="topbar-actions">
+      <div class="lang-switch lang-switch--dark" data-lang-switch aria-label="Tilni tanlash"></div>
+
+      <button class="icon-btn theme-btn" id="theme-toggle" type="button" aria-pressed="false">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19" /></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5Z" /></svg>
+      </button>
+
+      <a class="icon-btn" href="index.html" data-i18n-aria="profile.back" data-i18n-title="profile.back" aria-label="Bosh sahifa">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5V20a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 20Z" /><path d="M9.5 21.5V14h5v7.5" /></svg>
+      </a>
+
+      <span class="top-avatar" id="top-avatar">AK</span>
+
+      <button class="btn-ghost-dark" id="logout" type="button" data-i18n="profile.logout">Tizimdan chiqish</button>
+    </div>
+  </header>
+
+  <main class="pf-main">
+    <!-- ============ HERO ============ -->
+    <section class="welcome-card pf-hero">
+      <div class="welcome-glow" aria-hidden="true"></div>
+
+      <div class="pf-hero-id">
+        <span class="profile-avatar pf-avatar" id="pf-avatar">AK</span>
+        <div class="pf-hero-copy">
+          <p class="welcome-date" id="pf-date">Bugun, 5-noyabr</p>
+          <h2 id="pf-hello">Xush kelibsiz, Aziz</h2>
+          <p id="pf-sub" data-i18n="profile.sub">Ma'lumotlaringiz, buyurtmalaringiz va tarifingiz bitta joyda</p>
+
+          <div class="pf-hero-meta">
+            <span class="pf-meta-chip"><em data-i18n="profile.role">Rol</em><strong id="pf-role">Usta</strong></span>
+            <span class="pf-meta-chip"><em data-i18n="profile.district">Tuman</em><strong id="pf-district">Chilonzor</strong></span>
+            <span class="pf-meta-chip"><em data-i18n="profile.since">Ro'yxatdan o'tgan</em><strong id="pf-since">—</strong></span>
+            <span class="pf-meta-chip"><em data-i18n="profile.lastLogin">Oxirgi kirish</em><strong id="pf-lastlogin">—</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pf-hero-plan">
+        <p class="pf-hero-plan-label" data-i18n="profile.plan.current">Joriy tarif</p>
+        <span class="plan-badge plan-badge--pro" id="pf-plan-badge">Pro</span>
+        <p class="pf-hero-plan-price" id="pf-plan-price">99 000 so'm / oy</p>
+        <p class="pf-hero-plan-note" id="pf-plan-note">Komissiya 8%</p>
+      </div>
+    </section>
+
+    <!-- ============ KPI ============ -->
+    <section class="kpi-grid pf-kpis">
+      <article class="kpi">
+        <p class="kpi-label" data-i18n="profile.kpiOrders">Buyurtmalarim</p>
+        <strong class="kpi-value" id="pf-kpi-orders">0</strong>
+      </article>
+      <article class="kpi">
+        <p class="kpi-label" data-i18n="profile.kpiDone">Bajarilgan</p>
+        <strong class="kpi-value" id="pf-kpi-done">0</strong>
+      </article>
+      <article class="kpi">
+        <p class="kpi-label" data-i18n="profile.kpiSpent">Jami harajat</p>
+        <strong class="kpi-value" id="pf-kpi-spent">0</strong>
+      </article>
+      <article class="kpi">
+        <p class="kpi-label" data-i18n="profile.rating">Reyting</p>
+        <strong class="kpi-value" id="pf-kpi-rating">—</strong>
+      </article>
+    </section>
+
+    <!-- ============ TABS ============ -->
+    <nav class="pf-tabs" role="tablist" aria-label="Profil bo'limlari">
+      <button class="pf-tab active" role="tab" aria-selected="true" data-tab="orders" id="tab-btn-orders" data-i18n="profile.tabs.orders">Buyurtmalarim</button>
+      <button class="pf-tab" role="tab" aria-selected="false" data-tab="plan" id="tab-btn-plan" data-i18n="profile.tabs.plan">Tarifim</button>
+      <button class="pf-tab" role="tab" aria-selected="false" data-tab="settings" id="tab-btn-settings" data-i18n="profile.tabs.settings">Sozlamalar</button>
+    </nav>
+
+    <!-- ============ ORDERS ============ -->
+    <section class="pf-view active" id="tab-orders">
+      <article class="panel">
+        <div class="panel-head panel-head-wrap">
+          <div>
+            <h2 data-i18n="profile.orders.title">Buyurtmalar tarixi</h2>
+            <p data-i18n="profile.orders.sub">Sizga tegishli so'rovlar va ularning joriy holati</p>
+          </div>
+          <a class="chip" href="index.html#quick" data-i18n="profile.orders.callAgain">Yana usta chaqirish</a>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th data-i18n="admin.th.service">Xizmat</th>
+                <th data-i18n="admin.th.master">Usta</th>
+                <th data-i18n="admin.th.amount">Summa</th>
+                <th data-i18n="admin.th.status">Holat</th>
+                <th data-i18n="admin.th.time">Vaqt</th>
+              </tr>
+            </thead>
+            <tbody id="pf-orders-body"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ PLAN ============ -->
+    <section class="pf-view" id="tab-plan">
+      <article class="panel">
+        <div class="panel-head panel-head-wrap">
+          <div>
+            <h2 data-i18n="profile.plan.title">Tarifingiz</h2>
+            <p data-i18n="profile.plan.sub">Obunani istalgan payt almashtirsangiz bo'ladi</p>
+          </div>
+          <div class="filter-chips" id="pf-billing">
+            <button class="chip active" data-billing="monthly" data-i18n="pricing.monthly">Oylik</button>
+            <button class="chip" data-billing="yearly" data-i18n="pricing.yearly">Yillik</button>
+          </div>
+        </div>
+
+        <div class="pf-current">
+          <div class="pf-current-row">
+            <span class="pf-current-label" data-i18n="profile.plan.subscriptionId">Obuna ID</span>
+            <strong id="pf-sub-id">—</strong>
+          </div>
+          <div class="pf-current-row">
+            <span class="pf-current-label" data-i18n="profile.plan.statusLabel">Obuna holati</span>
+            <span class="status st-done" id="pf-sub-status">Faol</span>
+          </div>
+          <div class="pf-current-row">
+            <span class="pf-current-label" data-i18n="profile.plan.commission">Komissiya</span>
+            <strong id="pf-commission">8%</strong>
+          </div>
+          <div class="pf-current-row">
+            <span class="pf-current-label" data-i18n="profile.plan.renews">Keyingi to'lov sanasi</span>
+            <strong id="pf-renews">—</strong>
+          </div>
+        </div>
+
+        <div class="pf-plans" id="pf-plans"></div>
+      </article>
+    </section>
+
+    <!-- ============ SETTINGS ============ -->
+    <section class="pf-view" id="tab-settings">
+      <div class="settings-grid">
+        <article class="panel settings-card">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="profile.settings.title">Shaxsiy ma'lumotlar</h2>
+              <p data-i18n="profile.settings.sub">Kontaktlaringiz va bildirishnoma sozlamalari</p>
+            </div>
+          </div>
+
+          <form id="pf-form" class="pf-form" novalidate>
+            <label class="pf-field">
+              <span data-i18n="profile.settings.name">Ism familiya</span>
+              <input type="text" id="pf-name" name="name" maxlength="60" autocomplete="name" required />
+            </label>
+
+            <label class="pf-field">
+              <span data-i18n="profile.settings.email">Email</span>
+              <input type="email" id="pf-email" name="email" maxlength="80" autocomplete="email" required />
+            </label>
+
+            <label class="pf-field">
+              <span data-i18n="profile.settings.phone">Telefon</span>
+              <input type="tel" id="pf-phone" name="phone" maxlength="24" autocomplete="tel" placeholder="+998 __ ___ __ __" required />
+            </label>
+
+            <label class="pf-field">
+              <span data-i18n="profile.settings.district">Tumaningiz</span>
+              <select class="select" id="pf-district-select" name="district"></select>
+            </label>
+
+            <div class="setting-row">
+              <div>
+                <strong data-i18n="profile.settings.notifySms">SMS bildirishnomalar</strong>
+                <small data-i18n="profile.settings.notifySmsSub">Buyurtma holati o'zgarganda SMS yuboramiz</small>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="pf-notify-sms" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <strong data-i18n="profile.settings.notifyPush">Ilova bildirishnomalari</strong>
+                <small data-i18n="profile.settings.notifyPushSub">Yangi buyurtmalar haqida push xabar</small>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="pf-notify-push" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <p class="pf-error" id="pf-form-error" hidden></p>
+            <button class="btn-save" type="submit" id="pf-save" data-i18n="profile.settings.save">O'zgarishlarni saqlash</button>
+          </form>
+        </article>
+
+        <article class="panel settings-card">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="profile.settings.passwordTitle">Parolni almashtirish</h2>
+              <p data-i18n="profile.settings.passwordSub">Yangi parol kamida 6 belgidan iborat bo'lsin</p>
+            </div>
+          </div>
+
+          <form id="pf-password-form" class="pf-form" novalidate>
+            <label class="pf-field">
+              <span data-i18n="profile.settings.currentPassword">Joriy parol</span>
+              <input type="password" id="pf-pw-current" name="current" autocomplete="current-password" required />
+            </label>
+
+            <label class="pf-field">
+              <span data-i18n="profile.settings.newPassword">Yangi parol</span>
+              <input type="password" id="pf-pw-next" name="next" minlength="6" autocomplete="new-password" required />
+            </label>
+
+            <label class="pf-field">
+              <span data-i18n="profile.settings.confirmPassword">Yangi parolni tasdiqlang</span>
+              <input type="password" id="pf-pw-confirm" name="confirm" minlength="6" autocomplete="new-password" required />
+            </label>
+
+            <p class="pf-error" id="pf-pw-error" hidden></p>
+            <button class="btn-save" type="submit" id="pf-pw-save" data-i18n="profile.settings.change">Parolni yangilash</button>
+          </form>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="pf-toast" role="status" aria-live="polite"></div>
+
+  <script src="i18n.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

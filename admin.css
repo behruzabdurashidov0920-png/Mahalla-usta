@@ -857,6 +857,42 @@ button, input, textarea, select { font-family: inherit; }
 .st-done { color: var(--positive); background: rgba(34, 181, 115, .12); }
 .st-canceled { color: var(--danger-strong); background: rgba(248, 113, 113, .11); }
 
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+.plan-badge--standart {
+  color: var(--muted-2);
+  background: var(--fill-hover);
+  border-color: var(--row-line);
+}
+
+.plan-badge--pro {
+  color: #04140D;
+  background: linear-gradient(135deg, #6EE7A8, #22B573);
+}
+
+.plan-badge--biznes {
+  color: #FEF3C7;
+  background: rgba(251, 191, 36, .16);
+  border-color: rgba(251, 191, 36, .3);
+}
+
+.cell-empty {
+  padding: 22px 12px;
+  text-align: center;
+  color: var(--muted);
+  font-size: .8rem;
+}
+
 .cell-rating { color: var(--warn-strong); font-weight: 700; }
 
 /* ---------- Filters ---------- */
@@ -1534,3 +1570,20 @@ html[data-theme="light"] .lang-switch--dark button.active { background: #0D7A4A;
 
 html[data-theme="light"] .theme-btn .icon-sun { display: none; }
 html[data-theme="light"] .theme-btn .icon-moon { display: block; }
+
+html[data-theme="light"] .plan-badge--standart {
+  color: #55705F;
+  background: rgba(9, 61, 38, .06);
+  border-color: rgba(9, 61, 38, .14);
+}
+
+html[data-theme="light"] .plan-badge--pro {
+  color: #fff;
+  background: linear-gradient(135deg, #12A05F, #0A5C39);
+}
+
+html[data-theme="light"] .plan-badge--biznes {
+  color: #92400E;
+  background: rgba(245, 158, 11, .16);
+  border-color: rgba(245, 158, 11, .38);
+}
