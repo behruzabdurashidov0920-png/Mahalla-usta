@@ -350,6 +350,12 @@
           cleared: "Suhbat tozalandi",
           demo: "Demo rejim: server ulanmagan",
         },
+        theme: {
+          toggle: "Rejimni almashtirish",
+          light: "Yorug' rejim",
+          dark: "Tungi rejim",
+          changed: "{mode} yoqildi",
+        },
         aiReply: {
           problemHeader: "Diqqat talab qiladigan {n} ta holat:",
           problemCanceled: "• #{id} — bekor qilingan {service} buyurtmasi ({client}). Mijoz sababini aniqlashtirish kerak.",
@@ -763,6 +769,12 @@
           cleared: "Чат очищен",
           demo: "Демо-режим: сервер не подключён",
         },
+        theme: {
+          toggle: "Переключить тему",
+          light: "Светлая тема",
+          dark: "Тёмная тема",
+          changed: "Включена {mode}",
+        },
         aiReply: {
           problemHeader: "Требуют внимания {n} случая:",
           problemCanceled: "• #{id} — отменённый заказ «{service}» ({client}). Нужно уточнить причину у клиента.",
@@ -1175,6 +1187,12 @@
           saved: "Settings saved",
           cleared: "Chat cleared",
           demo: "Demo mode: server is not connected",
+        },
+        theme: {
+          toggle: "Toggle theme",
+          light: "Light mode",
+          dark: "Dark mode",
+          changed: "{mode} enabled",
         },
         aiReply: {
           problemHeader: "{n} cases need attention:",

@@ -428,6 +428,39 @@
     saveBtn.addEventListener("click", () => showToast(t("admin.toast.saved")));
   }
 
+  /* ---------- Theme ---------- */
+  const themeBtn = $("#theme-toggle");
+
+  const currentTheme = () => (document.documentElement.dataset.theme === "light" ? "light" : "dark");
+  const themeLabel = (mode) => t(mode === "light" ? "admin.theme.light" : "admin.theme.dark");
+
+  function syncThemeLabel() {
+    if (!themeBtn) return;
+    const mode = currentTheme();
+    const label = `${t("admin.theme.toggle")}: ${themeLabel(mode)}`;
+    themeBtn.setAttribute("aria-label", label);
+    themeBtn.title = label;
+    themeBtn.setAttribute("aria-pressed", String(mode === "light"));
+  }
+
+  if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+      const next = currentTheme() === "light" ? "dark" : "light";
+      document.documentElement.dataset.theme = next;
+
+      try {
+        window.localStorage.setItem("mu_theme", next);
+      } catch (error) {
+        /* storage unavailable */
+      }
+
+      syncThemeLabel();
+      showToast(t("admin.theme.changed", { mode: themeLabel(next) }));
+    });
+  }
+
+  syncThemeLabel();
+
   /* ============================================================
      AI chat
      ============================================================ */
@@ -678,6 +711,7 @@
   document.addEventListener("mu:langchange", () => {
     renderAll();
     switchView(currentView);
+    syncThemeLabel();
 
     const messages = chatLog.querySelectorAll(".msg");
     if (messages.length === 1 && messages[0].classList.contains("ai")) {

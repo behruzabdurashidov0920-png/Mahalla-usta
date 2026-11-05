@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    try {
+      document.documentElement.dataset.theme =
+        window.localStorage.getItem("mu_theme") === "light" ? "light" : "dark";
+    } catch (error) {
+      document.documentElement.dataset.theme = "dark";
+    }
+  </script>
   <title>Boshqaruv paneli — MahallaUsta</title>
   <meta name="description" content="MahallaUsta administrator paneli." />
   <meta name="robots" content="noindex" />
@@ -110,6 +118,11 @@
         <button class="icon-btn bell" aria-label="Bildirishnomalar" data-i18n-aria="aria.notifications">
           <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9Z" /><path d="M10 18.5a2 2 0 0 0 4 0" /></svg>
           <span class="bell-dot" aria-hidden="true"></span>
+        </button>
+
+        <button class="icon-btn theme-btn" id="theme-toggle" type="button" aria-label="Rejimni almashtirish" aria-pressed="false">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.6v2.3M12 19.1v2.3M2.6 12h2.3M19.1 12h2.3M5.5 5.5l1.6 1.6M16.9 16.9l1.6 1.6M18.5 5.5l-1.6 1.6M7.1 16.9l-1.6 1.6" /></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 14.6A8.6 8.6 0 1 1 9.4 3.8a6.9 6.9 0 0 0 10.8 10.8Z" /></svg>
         </button>
 
         <div class="lang-switch lang-switch--dark" data-lang-switch></div>
