@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="i18n.css" />
 </head>
@@ -377,6 +378,14 @@
             </div>
           </article>
         </div>
+        <div class="master-map-section reveal">
+          <div class="master-map-heading">
+            <h3 data-i18n="masters.mapTitle">Ustalar xaritada</h3>
+            <p data-i18n="masters.mapSub">Faqat joylashuvini ulashishga rozilik bergan ustalar ko'rinadi.</p>
+          </div>
+          <div id="masters-map" class="masters-map" role="application" aria-label="Ustalar xaritasi" data-i18n-aria="map.aria"></div>
+          <p class="map-status" id="masters-map-status" role="status" aria-live="polite" data-i18n="map.loading">Xarita yuklanmoqda...</p>
+        </div>
       </div>
     </section>
 
@@ -646,6 +655,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="i18n.js"></script>
   <script src="script.js"></script>
 </body>

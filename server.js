@@ -150,6 +150,10 @@ async function handleApi(req, res, url) {
   const route = `${req.method} ${url.pathname}`;
   const ip = req.socket.remoteAddress || "local";
 
+  if (route === "GET /api/masters/locations") {
+    return sendJson(res, 200, { locations: store.shareableMasterLocations() });
+  }
+
   if (route === "POST /api/auth/login") {
     const body = await readJson(req);
 
@@ -234,6 +238,26 @@ async function handleApi(req, res, url) {
     });
 
     if (result.error) return sendJson(res, 409, { error: result.error });
+    return sendJson(res, 200, result);
+  }
+
+  if (route === "POST /api/profile/location") {
+    const user = currentUser(req);
+    if (!user) return sendJson(res, 401, { error: "unauthorized" });
+
+    const body = await readJson(req);
+    if (typeof body.share !== "boolean") {
+      return sendJson(res, 400, { error: "invalid_location" });
+    }
+
+    const result = store.updateMasterLocation(user, {
+      share: body.share,
+      latitude: body.latitude,
+      longitude: body.longitude,
+    });
+
+    if (result.error === "master_only") return sendJson(res, 403, { error: result.error });
+    if (result.error) return sendJson(res, 400, { error: result.error });
     return sendJson(res, 200, result);
   }
 

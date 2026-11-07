@@ -285,6 +285,18 @@ body.profile-page {
 
 .pf-form .btn-save { margin-top: 4px; }
 
+.location-sharing-setting small {
+  display: block;
+  margin-top: 5px;
+  max-width: 520px;
+  line-height: 1.5;
+}
+
+.location-sharing-setting #pf-location-status {
+  color: var(--strong-soft);
+  font-weight: 700;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 980px) {
   .pf-hero { flex-direction: column; align-items: stretch; }

@@ -5,6 +5,99 @@
 
   const t = (key, vars) => (window.MuI18n ? window.MuI18n.t(key, vars) : key);
 
+  /* ---------- Opt-in master location map ---------- */
+  const mapElement = document.getElementById("masters-map");
+  if (mapElement) {
+    const mapStatus = document.getElementById("masters-map-status");
+
+    if (!window.L) {
+      mapStatus.textContent = t("map.error");
+      document.addEventListener("mu:langchange", () => {
+        mapStatus.textContent = t("map.error");
+      });
+    } else {
+      const locationMap = window.L.map(mapElement).setView([41.2995, 69.2401], 11);
+      window.L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 19,
+        attribution: "Tiles &copy; Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+      }).addTo(locationMap);
+
+      const markers = window.L.layerGroup().addTo(locationMap);
+      let hasZoomedToMasters = false;
+
+      async function refreshMasterLocations() {
+        try {
+          const response = await fetch("/api/masters/locations", { cache: "no-store" });
+          if (!response.ok) throw new Error(`location_api_${response.status}`);
+          const data = await response.json();
+          const locations = Array.isArray(data.locations) ? data.locations : [];
+
+          markers.clearLayers();
+          const validLocations = locations.filter((item) =>
+            item &&
+            typeof item.name === "string" &&
+            typeof item.district === "string" &&
+            Number.isFinite(item.latitude) &&
+            Number.isFinite(item.longitude)
+          );
+          const markerPoints = [];
+
+          validLocations.forEach((item) => {
+            const point = [item.latitude, item.longitude];
+            markerPoints.push(point);
+
+            const popup = document.createElement("div");
+            popup.className = "map-popup";
+            const name = document.createElement("strong");
+            name.textContent = item.name;
+            const district = document.createElement("span");
+            district.textContent = item.district;
+            const updated = document.createElement("span");
+            const date = new Date(item.updatedAt);
+            const locale = { uz: "uz-UZ", ru: "ru-RU", en: "en-US" }[
+              window.MuI18n ? window.MuI18n.getLang() : "uz"
+            ] || "uz-UZ";
+            updated.textContent = t("map.updated", {
+              time: Number.isNaN(date.getTime())
+                ? "—"
+                : new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit" }).format(date),
+            });
+            popup.append(name, district, updated);
+
+            const icon = window.L.divIcon({
+              className: "map-pin-icon",
+              html: "<span></span>",
+              iconSize: [18, 18],
+              iconAnchor: [9, 9],
+            });
+            window.L.marker(point, { icon }).bindPopup(popup).addTo(markers);
+          });
+
+          if (validLocations.length === 0) {
+            mapStatus.textContent = t("map.empty");
+          } else {
+            mapStatus.textContent = "";
+            if (!hasZoomedToMasters) {
+              locationMap.fitBounds(markerPoints, { padding: [32, 32], maxZoom: 14 });
+              hasZoomedToMasters = true;
+            }
+          }
+        } catch (error) {
+          if (window.location.protocol === "file:") {
+            mapStatus.textContent = t("map.serverRequired");
+          } else {
+            console.error("Master locations could not be loaded:", error);
+            mapStatus.textContent = t("map.error");
+          }
+        }
+      }
+
+      refreshMasterLocations();
+      window.setInterval(refreshMasterLocations, 30000);
+      document.addEventListener("mu:langchange", refreshMasterLocations);
+    }
+  }
+
   /* ---------- Header shadow on scroll ---------- */
   const header = document.querySelector(".site-header");
   const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 8);

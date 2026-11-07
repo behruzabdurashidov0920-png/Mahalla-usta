@@ -228,6 +228,18 @@
               </label>
             </div>
 
+            <div class="setting-row location-sharing-setting" id="pf-location-setting" hidden>
+              <div>
+                <strong data-i18n="profile.settings.shareLocation">Xaritada joylashuvni ulashish</strong>
+                <small data-i18n="profile.settings.shareLocationSub">Joylashuv xaritada taxminan 100 m aniqlikda ko'rinadi. Istalgan payt o'chirishingiz mumkin.</small>
+                <small id="pf-location-status" role="status" aria-live="polite"></small>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="pf-share-location" />
+                <span class="slider"></span>
+              </label>
+            </div>
+
             <p class="pf-error" id="pf-form-error" hidden></p>
             <button class="btn-save" type="submit" id="pf-save" data-i18n="profile.settings.save">O'zgarishlarni saqlash</button>
           </form>

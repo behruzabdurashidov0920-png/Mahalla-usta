@@ -770,6 +770,56 @@ a { color: inherit; }
   box-shadow: var(--shadow-md);
 }
 
+.master-map-section {
+  margin-top: 40px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.master-map-heading h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--g-900);
+}
+
+.master-map-heading p,
+.map-status {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+.masters-map {
+  z-index: 0;
+  height: 420px;
+  margin-top: 18px;
+  border-radius: 16px;
+  background: var(--mint-50);
+  overflow: hidden;
+}
+
+.map-pin-icon {
+  border: 0;
+  background: transparent;
+}
+
+.map-pin-icon span {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--g-500);
+  box-shadow: 0 2px 8px rgba(5, 48, 29, .45);
+}
+
+.map-popup { display: grid; gap: 3px; }
+.map-popup strong { color: var(--g-900); }
+.map-popup span { color: var(--muted); }
+
 .master-top {
   display: flex;
   align-items: center;
@@ -1670,6 +1720,8 @@ a { color: inherit; }
   .service-card { padding: 18px; }
   .step { padding: 26px 22px; }
   .master-card { padding: 22px; }
+  .master-map-section { padding: 18px; }
+  .masters-map { height: 340px; }
 
   .quote-card { padding: 30px 24px; border-radius: 24px; }
   .quote-mark { width: 76px; top: 20px; right: 20px; }

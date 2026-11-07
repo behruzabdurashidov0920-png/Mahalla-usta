@@ -51,6 +51,119 @@
     toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2800);
   }
 
+  function setLocationStatus(key) {
+    currentLocationStatusKey = key;
+    $("#pf-location-status").textContent = t(key);
+  }
+
+  function getCurrentLocation() {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 15000,
+      });
+    });
+  }
+
+  async function saveLocationSharing(share, position) {
+    const response = await request("/api/profile/location", {
+      method: "POST",
+      body: JSON.stringify({
+        share,
+        latitude: position ? position.coords.latitude : undefined,
+        longitude: position ? position.coords.longitude : undefined,
+      }),
+    });
+    if (response.status !== 200) throw new Error(response.data.error || "location_save_failed");
+    state.user = response.data.user;
+  }
+
+  function stopLocationWatch() {
+    if (locationWatchId !== null && navigator.geolocation) {
+      navigator.geolocation.clearWatch(locationWatchId);
+      locationWatchId = null;
+    }
+  }
+
+  function startLocationWatch() {
+    if (!navigator.geolocation || locationWatchId !== null) return;
+    locationWatchId = navigator.geolocation.watchPosition(
+      async (position) => {
+        if (!state.user.shareLocation || locationUpdatePending || Date.now() - lastLocationSentAt < 60000) return;
+
+        locationUpdatePending = true;
+        try {
+          await saveLocationSharing(true, position);
+          lastLocationSentAt = Date.now();
+          setLocationStatus("profile.settings.locationShared");
+        } catch (error) {
+          console.error("Master location update failed:", error);
+          setLocationStatus("profile.settings.locationSaveFailed");
+        } finally {
+          locationUpdatePending = false;
+        }
+      },
+      (error) => {
+        console.warn("Master location tracking failed:", error);
+        setLocationStatus("profile.settings.locationUnavailable");
+      },
+      { enableHighAccuracy: true, maximumAge: 60000, timeout: 20000 }
+    );
+  }
+
+  async function toggleLocationSharing() {
+    const checkbox = $("#pf-share-location");
+    const shouldShare = checkbox.checked;
+    checkbox.disabled = true;
+
+    if (!state.online || state.user.role !== "Usta") {
+      checkbox.checked = Boolean(state.user.shareLocation);
+      setLocationStatus("profile.settings.locationSaveFailed");
+      checkbox.disabled = false;
+      return;
+    }
+
+    if (shouldShare) {
+      if (!navigator.geolocation) {
+        checkbox.checked = false;
+        setLocationStatus("profile.settings.locationUnavailable");
+        checkbox.disabled = false;
+        return;
+      }
+
+      setLocationStatus("profile.settings.locationRequesting");
+      try {
+        const position = await getCurrentLocation();
+        await saveLocationSharing(true, position);
+        lastLocationSentAt = Date.now();
+        setLocationStatus("profile.settings.locationShared");
+        startLocationWatch();
+      } catch (error) {
+        console.error("Master location sharing could not be enabled:", error);
+        checkbox.checked = false;
+        state.user.shareLocation = false;
+        setLocationStatus(typeof error.code === "number"
+          ? "profile.settings.locationUnavailable"
+          : "profile.settings.locationSaveFailed");
+      }
+    } else {
+      stopLocationWatch();
+      try {
+        await saveLocationSharing(false);
+        setLocationStatus("profile.settings.locationHidden");
+      } catch (error) {
+        console.error("Master location sharing could not be disabled:", error);
+        checkbox.checked = true;
+        state.user.shareLocation = true;
+        setLocationStatus("profile.settings.locationSaveFailed");
+        startLocationWatch();
+      }
+    }
+
+    checkbox.disabled = false;
+  }
+
   async function request(url, options = {}) {
     const response = await fetch(url, {
       credentials: "same-origin",
@@ -192,6 +305,10 @@
   /* ---------- State ---------- */
   const state = { user: null, profile: null, billing: "monthly", online: true };
   let formTouched = false;
+  let locationWatchId = null;
+  let locationUpdatePending = false;
+  let lastLocationSentAt = 0;
+  let currentLocationStatusKey = "profile.settings.locationHidden";
 
   const roleLabel = (role) =>
     role === "Administrator"
@@ -368,6 +485,11 @@
     $("#pf-phone").value = formatPhone(user.phone);
     $("#pf-notify-sms").checked = Boolean(user.notifySms);
     $("#pf-notify-push").checked = Boolean(user.notifyPush);
+    $("#pf-location-setting").hidden = user.role !== "Usta";
+    $("#pf-share-location").checked = Boolean(user.shareLocation);
+    setLocationStatus(user.shareLocation
+      ? "profile.settings.locationShared"
+      : "profile.settings.locationHidden");
 
     const select = $("#pf-district-select");
     select.innerHTML = Object.keys(ENUM_KEYS.district)
@@ -449,6 +571,8 @@
     return; // redirected to login
   }
 
+  if (state.user.role === "Usta" && state.user.shareLocation) startLocationWatch();
+
   /* ---------- Events ---------- */
   $$(".pf-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
@@ -476,9 +600,13 @@
   });
 
   $("#pf-form").addEventListener("input", () => {
+    if (document.activeElement.id === "pf-share-location") return;
     formTouched = true;
     clearErrors();
   });
+
+  $("#pf-share-location").addEventListener("change", toggleLocationSharing);
+  document.addEventListener("mu:langchange", () => setLocationStatus(currentLocationStatusKey));
 
   $("#pf-form").addEventListener("submit", async (event) => {
     event.preventDefault();
