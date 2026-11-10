@@ -5,6 +5,55 @@
 
   const t = (key, vars) => (window.MuI18n ? window.MuI18n.t(key, vars) : key);
 
+  /* ---------- Light / dark theme ---------- */
+  const THEME_KEY = "mu_theme";
+
+  function currentTheme() {
+    return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  }
+
+  function syncThemeButtons() {
+    const theme = currentTheme();
+    document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(theme === "dark"));
+      button.setAttribute("aria-label", t(theme === "dark" ? "aria.themeLight" : "aria.themeDark"));
+    });
+  }
+
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const next = currentTheme() === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      try {
+        window.localStorage.setItem(THEME_KEY, next);
+      } catch (error) {
+        /* storage mavjud emas */
+      }
+      syncThemeButtons();
+    });
+  });
+
+  syncThemeButtons();
+  document.addEventListener("mu:langchange", syncThemeButtons);
+
+  /* Foydalanuvchi tanlov qilmagan bo'lsa, tizim sozlamasiga ergashamiz */
+  if (window.matchMedia) {
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+    const onSystemChange = (event) => {
+      let saved = null;
+      try {
+        saved = window.localStorage.getItem(THEME_KEY);
+      } catch (error) {
+        /* storage mavjud emas */
+      }
+      if (saved) return;
+      document.documentElement.dataset.theme = event.matches ? "dark" : "light";
+      syncThemeButtons();
+    };
+    if (systemDark.addEventListener) systemDark.addEventListener("change", onSystemChange);
+    else if (systemDark.addListener) systemDark.addListener(onSystemChange);
+  }
+
   /* ---------- Opt-in master location map ---------- */
   const mapElement = document.getElementById("masters-map");
   if (mapElement) {

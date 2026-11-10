@@ -31,6 +31,8 @@
         send: "Yuborish",
         billing: "To'lov davri",
         lang: "Tilni tanlash",
+        themeDark: "Tungi rejimga o'tish",
+        themeLight: "Yorug' rejimga o'tish",
       },
       common: {
         call: "Chaqirish",
@@ -633,6 +635,8 @@
         send: "Отправить",
         billing: "Период оплаты",
         lang: "Выбор языка",
+        themeDark: "Включить тёмную тему",
+        themeLight: "Включить светлую тему",
       },
       common: {
         call: "Вызвать",
@@ -1235,6 +1239,8 @@
         send: "Send",
         billing: "Billing period",
         lang: "Choose language",
+        themeDark: "Switch to dark mode",
+        themeLight: "Switch to light mode",
       },
       common: {
         call: "Call",
