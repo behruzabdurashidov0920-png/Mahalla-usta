@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const store = require("./lib/store");
 const ai = require("./lib/ai");
+const agent = require("./lib/agent");
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT) || 3000;
@@ -144,6 +145,29 @@ const clean = (value, max = 80) =>
     .replace(/[\u0000-\u001f\u007f]/g, "")
     .trim()
     .slice(0, max);
+
+/* ---------- AI agent rate limiting ---------- */
+const agentHits = new Map();
+const AGENT_WINDOW_MS = 10 * 60 * 1000;
+const AGENT_LIMIT = 40;
+
+function agentBlocked(ip) {
+  const entry = agentHits.get(ip);
+  if (!entry || entry.resetAt < Date.now()) return false;
+  return entry.count >= AGENT_LIMIT;
+}
+
+function noteAgentHit(ip) {
+  const now = Date.now();
+  const entry = agentHits.get(ip);
+
+  if (!entry || entry.resetAt < now) {
+    agentHits.set(ip, { count: 1, resetAt: now + AGENT_WINDOW_MS });
+    return;
+  }
+
+  entry.count += 1;
+}
 
 /* ---------- API ---------- */
 async function handleApi(req, res, url) {
@@ -287,6 +311,21 @@ async function handleApi(req, res, url) {
 
     if (!message) return sendJson(res, 400, { error: "empty_message" });
     return sendJson(res, 200, { reply: ai.reply(message, db, lang), lang });
+  }
+
+  /* Ochiq AI agent — landing sahifadagi yordamchi (login talab qilinmaydi) */
+  if (route === "POST /api/agent") {
+    if (agentBlocked(ip)) return sendJson(res, 429, { error: "rate_limited" });
+
+    const body = await readJson(req);
+    const message = clean(body.message, agent.MAX_MESSAGE);
+    const lang = agent.LANGS.includes(body.lang) ? body.lang : "uz";
+
+    if (!message) return sendJson(res, 400, { error: "empty_message" });
+
+    noteAgentHit(ip);
+    const result = await agent.respond({ message, lang, history: body.history, db });
+    return sendJson(res, 200, result);
   }
 
   if (route === "POST /api/requests") {

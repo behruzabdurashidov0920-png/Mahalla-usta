@@ -353,6 +353,18 @@
     if (lastFocused) lastFocused.focus();
   }
 
+  /* AI agent kabi tashqi komponentlar uchun so'rov formasini ochish nuqtasi */
+  window.MuModal = {
+    open(options) {
+      lastFocused = document.activeElement;
+      setFormMode(options || {});
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      const firstField = modalFormView.hidden ? null : document.getElementById("client-name");
+      requestAnimationFrame(() => firstField && firstField.focus());
+    },
+  };
+
   document.querySelectorAll("[data-open-modal]").forEach((btn) => {
     btn.addEventListener("click", (event) => {
       event.preventDefault();
