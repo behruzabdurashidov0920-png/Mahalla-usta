@@ -1,0 +1,9 @@
+.git
+.gitignore
+node_modules
+data/db.json
+.env
+.DS_Store
+npm-debug.log*
+assets/otash
+DEPLOY.md

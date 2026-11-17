@@ -1,0 +1,28 @@
+# Render.com blueprint — bir tugma bilan deploy
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: mahallausta
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      # ADMIN_PASSWORD — blueprint yaratishda so'raladi. Bo'sh qoldirmang!
+      - key: ADMIN_PASSWORD
+        sync: false
+      # AI_API_KEY — ixtiyoriy. Bo'sh bo'lsa agent lokal bilim bazasida ishlaydi.
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: AI_MODEL
+        value: gpt-4o-mini
+
+    # Ma'lumotlar doimiy saqlanishi uchun (Starter tarifi kerak):
+    # disk:
+    #   name: mahallausta-data
+    #   mountPath: /app/data
+    #   sizeGB: 1
