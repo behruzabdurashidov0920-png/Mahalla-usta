@@ -77,9 +77,10 @@ Kalit bo'lmasa ham chat ishlaydi — lokal bilim bazasi javob beradi (24/7, tash
 Deploydan keyin:
 
 1. `https://<domen>/` — landing sahifa ochiladi.
-2. O'ng pastdagi AI tugma → "qalaysan?" yoki "Santexnik qancha turadi?" yozib ko'ring.
-3. `https://<domen>/login.html` — admin bilan kirish.
-4. API tekshiruvi (PowerShell):
+2. `https://<domen>/mobile.html` — telefonlar uchun mobil versiya (pastki navigatsiya, AI panel).
+3. O'ng pastdagi AI tugma → "qalaysan?" yoki "Santexnik qancha turadi?" yozib ko'ring.
+4. `https://<domen>/login.html` — admin bilan kirish.
+5. API tekshiruvi (PowerShell):
 
 ```powershell
 Invoke-RestMethod -Uri "https://<domen>/api/agent" -Method Post `

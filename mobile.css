@@ -1,0 +1,556 @@
+/* ============================================================
+   MahallaUsta — mobil landing (mobile.html)
+   styles.css ustiga qo'shimcha qatlam: hech narsani buzmaydi,
+   faqat .m-shell ichidagi ko'rinishni ilova uslubiga keltiradi.
+   ============================================================ */
+
+/* ---------- Tashqi fon / app-shell ---------- */
+body {
+  background: #E7F2EB;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+html[data-theme="dark"] body {
+  background: #06120C;
+}
+
+.m-shell {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: var(--white);
+  box-shadow: 0 0 0 1px rgba(6, 58, 34, .06), 0 30px 80px rgba(6, 58, 34, .12);
+  overflow-x: clip;
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+html[data-theme="dark"] .m-shell {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .05), 0 30px 80px rgba(0, 0, 0, .5);
+}
+
+.m-shell .container {
+  max-width: none;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+html {
+  scroll-padding-top: 74px;
+}
+
+/* ---------- Header ---------- */
+.m-shell .site-header {
+  background: rgba(255, 255, 255, .92);
+}
+
+html[data-theme="dark"] .m-shell .site-header {
+  background: rgba(10, 23, 16, .92);
+}
+
+.m-shell .header-inner {
+  height: 62px;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.m-shell .brand {
+  gap: 8px;
+  min-width: 0;
+}
+
+.m-shell .brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+
+.m-shell .brand-name {
+  font-size: 1.06rem;
+}
+
+/* Headerda faqat tema va hamburger qoladi */
+.m-shell .header-actions {
+  gap: 8px;
+}
+
+.m-shell .header-actions .lang-switch,
+.m-shell .header-actions .btn {
+  display: none;
+}
+
+.m-shell .theme-toggle {
+  width: 40px;
+  height: 40px;
+}
+
+/* Hamburger har doim ko'rinadi */
+.m-shell .hamburger {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  padding: 11px;
+  flex: none;
+}
+
+/* Ochiladigan menyu — header ostidan, shell kengligida */
+.m-shell .nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 49;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  margin: 0;
+  padding: 10px 16px 18px;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 24px 40px rgba(6, 58, 34, .12);
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity .22s ease, transform .22s var(--ease);
+  max-height: calc(100dvh - 62px);
+  overflow-y: auto;
+}
+
+.m-shell .nav.open {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.m-shell .nav > a {
+  padding: 13px 2px;
+  font-size: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.m-shell .nav > a::after {
+  display: none;
+}
+
+.m-shell .nav-actions-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.m-shell .nav-actions-mobile .btn {
+  width: 100%;
+}
+
+.m-shell .nav-tools-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+html[data-theme="dark"] .m-shell .nav {
+  box-shadow: 0 24px 40px rgba(0, 0, 0, .45);
+}
+
+/* ---------- Hero ---------- */
+.m-shell .hero {
+  padding: 24px 0 40px;
+}
+
+.m-shell .hero-grid {
+  grid-template-columns: 1fr;
+  gap: 34px;
+}
+
+.m-shell .hero h1 {
+  font-size: clamp(1.95rem, 8.4vw, 2.5rem);
+  line-height: 1.12;
+  max-width: none;
+  margin-bottom: 16px;
+}
+
+.m-shell .lead {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.m-shell .badge {
+  margin-bottom: 18px;
+  font-size: .74rem;
+  padding: 7px 13px 7px 10px;
+}
+
+.m-shell .hero-cta {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.m-shell .hero-cta .btn {
+  width: 100%;
+}
+
+.m-shell .hero-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 12px;
+  max-width: none;
+  padding-top: 20px;
+}
+
+.m-shell .hero-stats dd {
+  font-size: 1.3rem;
+}
+
+.m-shell .hero-visual {
+  order: 2;
+}
+
+.m-shell .hero-photo-wrap {
+  width: 100%;
+  max-width: none;
+}
+
+.m-shell .float-verified {
+  left: 4px;
+}
+
+.m-shell .float-rating {
+  right: 4px;
+}
+
+/* ---------- Tezkor forma ---------- */
+.m-shell .quick-bar {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin-top: 26px;
+  padding: 16px;
+  border-radius: 20px;
+}
+
+.m-shell .quick-bar .field {
+  min-width: 0;
+}
+
+.m-shell .quick-bar .field + .field {
+  padding-left: 0;
+  padding-top: 10px;
+  border-left: 0;
+  border-top: 1px solid var(--line);
+}
+
+.m-shell .quick-bar .btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* ---------- Bo'limlar ---------- */
+.m-shell .section {
+  padding: 52px 0;
+}
+
+.m-shell .cta-section {
+  padding: 20px 0 56px;
+}
+
+.m-shell .section-head {
+  margin-bottom: 26px;
+}
+
+.m-shell .section-head h2 {
+  font-size: 1.6rem;
+  line-height: 1.18;
+}
+
+.m-shell .section-sub {
+  font-size: .95rem;
+}
+
+.m-shell .section-head-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.m-shell .service-grid,
+.m-shell .steps,
+.m-shell .master-grid,
+.m-shell .plan-grid,
+.m-shell .feature-grid,
+.m-shell .footer-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.m-shell .service-card {
+  padding: 18px;
+}
+
+.m-shell .step {
+  padding: 24px 20px;
+}
+
+.m-shell .step-num {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+}
+
+.m-shell .master-card {
+  padding: 20px;
+}
+
+.m-shell .master-map-section {
+  padding: 16px;
+}
+
+.m-shell .masters-map {
+  height: 260px;
+}
+
+.m-shell .plan {
+  padding: 24px 20px;
+}
+
+.m-shell .quote-card {
+  padding: 28px 20px;
+  border-radius: 22px;
+}
+
+.m-shell .cta {
+  padding: 32px 20px;
+  border-radius: 24px;
+}
+
+.m-shell .cta-actions {
+  width: 100%;
+  flex-direction: column;
+}
+
+.m-shell .cta-actions .btn {
+  width: 100%;
+}
+
+.m-shell .footer-grid {
+  gap: 26px;
+  padding-bottom: 34px;
+}
+
+.m-shell .footer-bottom {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding-bottom: 10px;
+}
+
+/* ---------- Modal — pastdan chiqadigan varaq ---------- */
+.m-shell .modal {
+  padding: 0;
+  place-items: end center;
+}
+
+.m-shell .modal-card {
+  width: min(480px, 100%);
+  max-height: 92dvh;
+  padding: 26px 20px calc(24px + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  animation: mSheetUp .3s var(--ease);
+}
+
+@keyframes mSheetUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- AI panel ---------- */
+.m-shell .ai-agent {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(100%, 480px);
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  padding: 0 12px;
+  align-items: stretch;
+}
+
+/* Pastki navigatsiyada AI tugmasi bor — suzuvchi tugma kerak emas */
+.m-shell .ai-launcher {
+  display: none;
+}
+
+.m-shell .ai-panel {
+  width: 100%;
+  height: min(70dvh, 560px);
+  border-radius: 20px;
+}
+
+.m-shell .toast {
+  bottom: calc(92px + env(safe-area-inset-bottom));
+  width: calc(100% - 32px);
+  max-width: 448px;
+}
+
+/* ---------- Pastki navigatsiya ---------- */
+.m-bottom {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 80;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  width: min(100%, 480px);
+  padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, .94);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -12px 30px rgba(6, 58, 34, .08);
+  transform: translateX(-50%);
+  visibility: visible;
+  transition: transform .25s var(--ease), opacity .2s ease, visibility 0s 0s;
+}
+
+.m-bottom.is-hidden {
+  transform: translate(-50%, 120%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform .25s var(--ease), opacity .2s ease, visibility 0s .25s;
+}
+
+.m-bottom__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 8px 2px 6px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: .66rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color .18s ease;
+}
+
+.m-bottom__item svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.m-bottom__item:hover,
+.m-bottom__item:focus-visible {
+  color: var(--g-600);
+}
+
+.m-bottom__item.is-active {
+  color: var(--g-600);
+}
+
+.m-bottom__item--ai {
+  color: var(--g-700);
+}
+
+.m-bottom__ai-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -18px;
+  border: 3px solid var(--white);
+  border-radius: 50%;
+  background: linear-gradient(140deg, #22B573, #0A5C39);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(7, 58, 34, .32);
+}
+
+.m-bottom__ai-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Dark theme ---------- */
+html[data-theme="dark"] .m-bottom {
+  background: rgba(10, 23, 16, .94);
+  box-shadow: 0 -12px 30px rgba(0, 0, 0, .45);
+}
+
+html[data-theme="dark"] .m-bottom__item {
+  color: #8FA79A;
+}
+
+html[data-theme="dark"] .m-bottom__item:hover,
+html[data-theme="dark"] .m-bottom__item:focus-visible,
+html[data-theme="dark"] .m-bottom__item.is-active {
+  color: #6EE7A8;
+}
+
+html[data-theme="dark"] .m-bottom__item--ai {
+  color: #6EE7A8;
+}
+
+html[data-theme="dark"] .m-bottom__ai-icon {
+  border-color: #122719;
+}
+
+html[data-theme="dark"] .m-shell .nav > a {
+  border-bottom-color: var(--line);
+}
+
+html[data-theme="dark"] .m-shell .quick-bar .field + .field {
+  border-top-color: var(--line);
+}
+
+/* ---------- Katta ekranlarda ham ilova ko'rinishi ---------- */
+@media (min-width: 521px) {
+  .m-shell {
+    min-height: 100vh;
+  }
+
+  .m-bottom {
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+}
+
+/* ---------- Juda kichik ekranlar ---------- */
+@media (max-width: 360px) {
+  .m-shell .brand-name {
+    font-size: .98rem;
+  }
+
+  .m-bottom__item {
+    font-size: .6rem;
+  }
+
+  .m-bottom__ai-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ---------- Harakatni kamaytirish ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .m-bottom {
+    transition: none;
+  }
+}

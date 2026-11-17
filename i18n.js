@@ -59,6 +59,7 @@
         yesterday: "Kecha",
       },
       nav: {
+        home: "Bosh",
         services: "Xizmatlar",
         masters: "Ustalar",
         pricing: "Tariflar",
@@ -678,6 +679,7 @@
         yesterday: "Вчера",
       },
       nav: {
+        home: "Главная",
         services: "Услуги",
         masters: "Мастера",
         pricing: "Тарифы",
@@ -1297,6 +1299,7 @@
         yesterday: "Yesterday",
       },
       nav: {
+        home: "Home",
         services: "Services",
         masters: "Masters",
         pricing: "Plans",
