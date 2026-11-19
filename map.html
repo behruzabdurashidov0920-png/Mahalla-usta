@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="uz" data-title="meta.map">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Usta Xaritasi — MahallaUsta</title>
+  <meta name="description" content="O'zbekiston bo'ylab tekshirilgan ustalarni xaritada ko'ring: manzilingizni kiriting, joylashuvingizni aniqlang va tumaningizdagi ustani chaqiring." />
+  <meta property="og:title" content="Usta Xaritasi — MahallaUsta" />
+  <meta property="og:description" content="O'zbekiston bo'ylab ustalar xaritasi: manzil qidirish, joylashuvni aniqlash va usta chaqirish." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%230D7A4A'/%3E%3Cpath d='M20 9.5 31 18.5v10.5a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V18.5L20 9.5Z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M17 31v-6h6v6' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://tile.openstreetmap.org" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="assets/vendor/leaflet.markercluster/MarkerCluster.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="map.css" />
+  <link rel="stylesheet" href="i18n.css" />
+</head>
+<body class="map-page">
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header scrolled" id="top">
+    <div class="container header-inner">
+      <a href="index.html" class="brand" aria-label="MahallaUsta bosh sahifa" data-i18n-aria="aria.home">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#12A05F" />
+              <stop offset="1" stop-color="#0A5C39" />
+            </linearGradient>
+          </defs>
+          <rect width="40" height="40" rx="11" fill="url(#brandGrad)" />
+          <path d="M20 9.5 31 18.5v10.5a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V18.5L20 9.5Z" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" />
+          <path d="M17 31v-6h6v6" fill="none" stroke="#fff" stroke-width="2.4" />
+        </svg>
+        <span class="brand-name">Mahalla<span>Usta</span></span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Asosiy menyu">
+        <a href="index.html#services" data-i18n="nav.services">Xizmatlar</a>
+        <a href="index.html#masters" data-i18n="nav.masters">Ustalar</a>
+        <a href="map.html" class="is-active" aria-current="page" data-i18n="nav.map">Usta xaritasi</a>
+        <a href="index.html#how" data-i18n="nav.how">Qanday ishlaydi</a>
+        <a href="login.html" data-i18n="nav.login">Kirish</a>
+        <div class="nav-actions-mobile">
+          <button class="btn btn-primary" id="nav-call" data-open-modal data-i18n="nav.callMaster">Usta chaqirish</button>
+          <div class="lang-switch lang-switch--mobile" data-lang-switch></div>
+        </div>
+      </nav>
+
+      <div class="header-actions">
+        <div class="lang-switch" data-lang-switch></div>
+        <button class="btn btn-primary" data-open-modal data-i18n="nav.callMaster">Usta chaqirish</button>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Menyuni ochish" data-i18n-aria="aria.menuOpen" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="map-shell">
+    <p class="sr-only" id="map-help">
+      Xarita klaviatura bilan boshqariladi: strelkalar — surish, + va − — masshtab,
+      Tab — tugmalarni aylanish.
+    </p>
+
+    <div class="map-canvas">
+      <!-- ============ MAP ============ -->
+      <div id="usta-map" class="usta-map" role="region" aria-label="Usta xaritasi" data-i18n-aria="map.ariaMap" tabindex="0"></div>
+
+      <!-- ============ FLOATING PANEL ============ -->
+      <section class="map-panel" id="map-panel" aria-labelledby="map-panel-title">
+        <div class="map-panel-head">
+          <h1 id="map-panel-title" data-i18n="map.title">Usta Xaritasi</h1>
+          <button type="button" class="map-panel-toggle" id="panel-toggle" aria-expanded="true" aria-controls="map-panel-body" aria-label="Panelni yig'ish" data-i18n-aria="map.collapse">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6" /></svg>
+          </button>
+        </div>
+
+        <div class="map-panel-body" id="map-panel-body">
+          <!-- Search -->
+          <form class="map-search" id="search-form" role="search" autocomplete="off">
+            <label class="sr-only" for="map-query" data-i18n="map.searchLabel">Manzil yoki shahar</label>
+            <span class="map-search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.35-4.35" /></svg>
+            </span>
+            <input id="map-query" name="query" type="text" role="combobox" aria-expanded="false" aria-controls="search-results" aria-autocomplete="list" aria-label="Manzil yoki shahar" placeholder="Manzil yoki shahar..." data-i18n-placeholder="map.searchPlaceholder" />
+            <span class="map-search-spinner" id="search-spinner" aria-hidden="true"></span>
+            <button type="submit" class="map-search-go" aria-label="Qidirish" data-i18n-aria="aria.search">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </button>
+          </form>
+
+          <ul class="map-results" id="search-results" role="listbox" aria-label="Qidiruv natijalari" data-i18n-aria="map.searchResults" hidden></ul>
+          <p class="map-search-note" id="search-note" data-i18n="map.searchHint">Manzilni yozing yoki xaritani siljitib belgilang.</p>
+
+          <!-- Regions -->
+          <div class="map-block">
+            <h2 class="map-block-title" data-i18n="map.regions">Hududlar</h2>
+            <div class="map-chips" id="region-chips" role="group" aria-label="Viloyatlar"></div>
+          </div>
+
+          <!-- Destination -->
+          <div class="map-dest" id="dest-card" hidden>
+            <p class="map-dest-label" data-i18n="map.destination">Sizning manzilingiz</p>
+            <p class="map-dest-address" id="dest-address">—</p>
+            <p class="map-dest-note" data-i18n="map.destNote">Markerani suring — manzil aniqlashadi.</p>
+            <div class="map-dest-actions">
+              <button type="button" class="btn btn-ghost btn-sm" id="dest-clear" data-i18n="map.clear">Bekor qilish</button>
+              <button type="button" class="btn btn-primary btn-sm" id="dest-request" data-i18n="map.request">Usta chaqirish</button>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <p class="map-status" id="status-line" role="status" aria-live="polite"></p>
+
+          <!-- Legend -->
+          <div class="map-legend">
+            <span class="legend-item">
+              <span class="legend-dot legend-dot--master" aria-hidden="true"></span>
+              <span data-i18n="map.legendMaster">Bo'sh usta</span>
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot legend-dot--busy" aria-hidden="true"></span>
+              <span data-i18n="map.legendBusy">Band usta</span>
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot legend-dot--dest" aria-hidden="true"></span>
+              <span data-i18n="map.legendDest">Mening manzilim</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FLOATING CONTROLS ============ -->
+      <div class="map-fabs" id="map-fabs">
+        <button type="button" class="map-fab map-fab--locate" id="locate-btn" aria-label="Mening joylashuvim" data-i18n-aria="map.locate">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.4" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /><circle cx="12" cy="12" r="8" /></svg>
+          <span class="map-fab-label" data-i18n="map.locate">Mening joylashuvim</span>
+        </button>
+        <button type="button" class="map-fab map-fab--pick" id="pick-btn" aria-pressed="false" aria-label="Xaritadan manzil tanlash" data-i18n-aria="map.pick">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+          <span class="map-fab-label" data-i18n="map.pick">Manzil tanlash</span>
+        </button>
+        <button type="button" class="map-fab map-fab--reset" id="reset-btn" aria-label="O'zbekiston bo'ylab ko'rinishga qaytish" data-i18n-aria="map.reset">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4" /><circle cx="12" cy="12" r="2.4" /></svg>
+          <span class="sr-only" data-i18n="map.reset">Butun O'zbekiston</span>
+        </button>
+      </div>
+
+      <!-- ============ DEMO DATA BADGE ============ -->
+      <p class="map-demo-chip" id="demo-chip" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01" /><path d="M12 3l9 16H3l9-16Z" /></svg>
+        <span data-i18n="map.demoBadge">Demo ma'lumotlar — production'da ko'rsatilmaydi</span>
+      </p>
+
+      <!-- ============ STATE OVERLAY ============ -->
+      <div class="map-state" id="map-state" hidden>
+        <div class="map-state-card">
+          <span class="map-state-icon" id="state-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+          </span>
+          <h2 id="state-title" data-i18n="map.loading">Xarita yuklanmoqda…</h2>
+          <p id="state-text" data-i18n="map.loadingSub">Ustalar va hududlar ma'lumotlari olinmoqda.</p>
+          <button type="button" class="btn btn-primary btn-sm" id="state-retry" hidden data-i18n="map.retry">Qayta urinish</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ REQUEST MODAL ============ -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card">
+      <button class="modal-close" aria-label="Yopish" data-i18n-aria="aria.close" data-close-modal>
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+
+      <div class="modal-body" id="modal-form-view">
+        <h2 id="modal-title" data-i18n="modal.callTitle">Usta chaqirish</h2>
+        <p class="modal-sub" data-i18n="map.modalSub">Tanlangan manzil bo'yicha 15 daqiqada aloqaga chiqamiz.</p>
+        <form id="request-form">
+          <div class="form-row">
+            <label for="client-name" data-i18n="modal.nameLabel">Ismingiz</label>
+            <input id="client-name" name="name" type="text" placeholder="Ism va familiya" data-i18n-placeholder="modal.namePlaceholder" autocomplete="name" required />
+          </div>
+          <div class="form-row">
+            <label for="client-phone" data-i18n="modal.phoneLabel">Telefon raqam</label>
+            <input id="client-phone" name="phone" type="tel" placeholder="+998 90 123 45 67" inputmode="tel" autocomplete="tel" required />
+          </div>
+          <div class="form-row">
+            <label for="client-service" data-i18n="modal.serviceLabel">Xizmat turi</label>
+            <select id="client-service" name="service" required>
+              <option value="" disabled selected data-i18n="modal.servicePlaceholder">Xizmatni tanlang</option>
+              <option value="Santexnika" data-i18n="enum.service.plumbing">Santexnika</option>
+              <option value="Elektr ishlari" data-i18n="enum.service.electrical">Elektr ishlari</option>
+              <option value="Duradgorlik" data-i18n="enum.service.carpentry">Duradgorlik</option>
+              <option value="Bo'yash va suvoq" data-i18n="enum.service.painting">Bo'yash va suvoq</option>
+              <option value="Plitka va kafel" data-i18n="enum.service.tiling">Plitka va kafel</option>
+              <option value="Konditsioner" data-i18n="enum.service.aircon">Konditsioner</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="client-district" data-i18n="modal.districtLabel">Tumaningiz</label>
+            <input id="client-district" name="district" type="text" placeholder="Masalan, Chilonzor" data-i18n-placeholder="modal.districtPlaceholder" required />
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit" data-i18n="modal.submit">So'rov yuborish</button>
+          <p class="form-note" data-i18n="modal.note">Yuborish orqali siz foydalanish shartlariga rozilik bildirasiz.</p>
+        </form>
+      </div>
+
+      <div class="modal-body modal-success" id="modal-success-view" hidden>
+        <span class="success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+        </span>
+        <h2 data-i18n="modal.successTitle">Rahmat!</h2>
+        <p class="modal-sub" data-i18n="modal.successText">So'rovingiz qabul qilindi. 15 daqiqada operatorimiz siz bilan bog'lanadi.</p>
+        <button class="btn btn-primary btn-lg" data-close-modal data-i18n="modal.close">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/vendor/leaflet/leaflet.js"></script>
+  <script src="assets/vendor/leaflet.markercluster/leaflet.markercluster.js"></script>
+  <script src="i18n.js"></script>
+  <script src="map.js"></script>
+</body>
+</html>

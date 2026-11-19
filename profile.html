@@ -46,6 +46,10 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5V20a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 20Z" /><path d="M9.5 21.5V14h5v7.5" /></svg>
       </a>
 
+      <a class="icon-btn" href="map.html" data-i18n-aria="profile.map" data-i18n-title="profile.map" aria-label="Usta xaritasi">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A7.5 7.5 0 0 1 12 22c-4 0-7-3-7-7s3-7 7-7 7 3 7 7-3 7-7 7ZM12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" /></svg>
+      </a>
+
       <span class="top-avatar" id="top-avatar">AK</span>
 
       <button class="btn-ghost-dark" id="logout" type="button" data-i18n="profile.logout">Tizimdan chiqish</button>
@@ -105,6 +109,7 @@
     <nav class="pf-tabs" role="tablist" aria-label="Profil bo'limlari">
       <button class="pf-tab active" role="tab" aria-selected="true" data-tab="orders" id="tab-btn-orders" data-i18n="profile.tabs.orders">Buyurtmalarim</button>
       <button class="pf-tab" role="tab" aria-selected="false" data-tab="plan" id="tab-btn-plan" data-i18n="profile.tabs.plan">Tarifim</button>
+      <button class="pf-tab" role="tab" aria-selected="false" data-tab="map" id="tab-btn-map" data-i18n="profile.tabs.map">Usta xaritasi</button>
       <button class="pf-tab" role="tab" aria-selected="false" data-tab="settings" id="tab-btn-settings" data-i18n="profile.tabs.settings">Sozlamalar</button>
     </nav>
 
@@ -274,6 +279,22 @@
           </form>
         </article>
       </div>
+    </section>
+
+    <!-- ============ MAP TAB ============ -->
+    <section class="pf-view" id="tab-map">
+      <article class="panel">
+        <div class="panel-head panel-head-wrap">
+          <div>
+            <h2 data-i18n="profile.map.title">Usta xaritasi</h2>
+            <p data-i18n="profile.map.sub">Yakina atrofdagi tekshirilgan ustalarni xaritada ko'ring va usta tanlang.</p>
+          </div>
+          <a class="chip btn-primary" href="map.html" data-i18n="profile.map.openMap">Xaritaga o'tish</a>
+        </div>
+        <div class="pf-map-placeholder">
+          <p data-i18n="profile.map.description">To'liq xaritadan foydalanish uchun quyidagi tugmani bosing. Xarita faqat tizimga kirgandan so'ng mavjud.</p>
+        </div>
+      </article>
     </section>
   </main>
 
