@@ -1524,6 +1524,7 @@
         tabs: {
           orders: "My orders",
           plan: "My plan",
+          map: "Master map",
           settings: "Settings",
         },
         orders: {
@@ -1589,6 +1590,12 @@
           phoneTaken: "This phone number is already in use",
           invalid: "Please check the entered data",
           failed: "Could not save. Please try again.",
+        },
+        map: {
+          title: "Master map",
+          sub: "Find verified masters nearby on the map and call a professional.",
+          openMap: "Open map",
+          description: "To use the full map, click the button below. The map is available only after signing in.",
         },
         toast: {
           demo: "Demo mode — the server is unreachable, sample data is shown.",

@@ -6,6 +6,8 @@ const path = require("node:path");
 const store = require("./lib/store");
 const ai = require("./lib/ai");
 const agent = require("./lib/agent");
+const map = require("./lib/map");
+const geocode = require("./lib/geocode");
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT) || 3000;
@@ -358,6 +360,45 @@ async function handleApi(req, res, url) {
       id: record ? record.id : null,
       plan: record && record.plan ? record.plan : null,
     });
+  }
+
+  /* ---------- Usta Xaritasi (auth required) ---------- */
+  if (route === "GET /api/map/data") {
+    const user = currentUser(req);
+    if (!user) return sendJson(res, 401, { error: "unauthorized" });
+    return sendJson(res, 200, map.buildPayload(db, { isSeedMaster: store.isSeedMaster }));
+  }
+
+  if (route === "GET /api/map/search") {
+    const user = currentUser(req);
+    if (!user) return sendJson(res, 401, { error: "unauthorized" });
+    if (!geocode.isConfigured()) {
+      return sendJson(res, 503, { error: "geocode_unavailable" });
+    }
+    const lang = ai.LANGS.includes(url.searchParams.get("lang")) ? url.searchParams.get("lang") : "uz";
+    const result = await geocode.search({
+      query: url.searchParams.get("q") || "",
+      lang,
+      ip,
+      limit: 6,
+    });
+    return sendJson(res, 200, result);
+  }
+
+  if (route === "GET /api/map/reverse") {
+    const user = currentUser(req);
+    if (!user) return sendJson(res, 401, { error: "unauthorized" });
+    if (!geocode.isConfigured()) {
+      return sendJson(res, 503, { error: "geocode_unavailable" });
+    }
+    const lang = ai.LANGS.includes(url.searchParams.get("lang")) ? url.searchParams.get("lang") : "uz";
+    const result = await geocode.reverse({
+      lat: url.searchParams.get("lat"),
+      lng: url.searchParams.get("lng"),
+      lang,
+      ip,
+    });
+    return sendJson(res, 200, result);
   }
 
   return false;
