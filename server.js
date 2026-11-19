@@ -175,7 +175,15 @@ async function handleApi(req, res, url) {
   const ip = req.socket.remoteAddress || "local";
 
   if (route === "GET /api/masters/locations") {
-    return sendJson(res, 200, { locations: store.shareableMasterLocations() });
+    const locations = store.shareableMasterLocations();
+    return sendJson(res, 200, {
+      locations,
+      count: locations.length,
+      live: locations.filter((item) => !item.demo).length,
+      demo: locations.filter((item) => item.demo).length,
+      windowMinutes: 15,
+      updatedAt: new Date().toISOString(),
+    });
   }
 
   if (route === "POST /api/auth/login") {

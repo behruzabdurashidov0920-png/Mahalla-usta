@@ -139,6 +139,9 @@
         error: "Xaritadagi ma'lumotni yuklab bo'lmadi. Qayta urinib ko'ring.",
         serverRequired: "Xarita ma'lumotlari uchun loyihani npm start buyrug'i bilan ishga tushiring va localhost:3000 manzilini oching.",
         updated: "Yangilangan: {time}",
+        online: "{n} usta onlayn",
+        live: "Jonli",
+        demo: "Demo usta",
       },
       master: {
         azizRole: "Santexnik · 9 yillik tajriba",
@@ -759,6 +762,9 @@
         error: "Не удалось загрузить данные карты. Попробуйте ещё раз.",
         serverRequired: "Для карты запустите проект командой npm start и откройте localhost:3000.",
         updated: "Обновлено: {time}",
+        online: "{n} мастеров онлайн",
+        live: "В сети",
+        demo: "Демо-мастер",
       },
       master: {
         azizRole: "Сантехник · опыт 9 лет",
@@ -1379,6 +1385,9 @@
         error: "Could not load map data. Please try again.",
         serverRequired: "To load map data, run npm start and open localhost:3000.",
         updated: "Updated: {time}",
+        online: "{n} masters online",
+        live: "Live",
+        demo: "Demo master",
       },
       master: {
         azizRole: "Plumber · 9 years of experience",

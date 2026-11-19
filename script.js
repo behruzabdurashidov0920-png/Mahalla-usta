@@ -66,13 +66,58 @@
       });
     } else {
       const locationMap = window.L.map(mapElement).setView([41.2995, 69.2401], 11);
-      window.L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+      /* OSM plitalari Toshkent bo'ylab barcha zoomlarda mavjud.
+         Esri World_Street_Map yuqori zoomda "Map data not yet available" qaytarardi. */
+      const baseTiles = window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        minZoom: 3,
         maxZoom: 19,
-        attribution: "Tiles &copy; Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+        maxNativeZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
       }).addTo(locationMap);
 
+      /* Plitka yuklanmasa, foydalanuvchiga jim qolmasdan xabar beramiz. */
+      let tileErrors = 0;
+      baseTiles.on("tileerror", () => {
+        tileErrors += 1;
+        if (tileErrors === 1) console.warn("Map tiles could not be loaded from OpenStreetMap.");
+      });
+      baseTiles.on("tileload", () => {
+        tileErrors = 0;
+      });
+
       const markers = window.L.layerGroup().addTo(locationMap);
+      const markerIndex = new Map();
       let hasZoomedToMasters = false;
+
+      function buildPopup(item) {
+        const popup = document.createElement("div");
+        popup.className = "map-popup";
+
+        const name = document.createElement("strong");
+        name.textContent = item.name;
+
+        const meta = document.createElement("span");
+        meta.className = "map-popup-meta";
+        meta.textContent = [item.spec, item.district].filter(Boolean).join(" · ");
+
+        const updated = document.createElement("span");
+        const date = new Date(item.updatedAt);
+        const locale = { uz: "uz-UZ", ru: "ru-RU", en: "en-US" }[
+          window.MuI18n ? window.MuI18n.getLang() : "uz"
+        ] || "uz-UZ";
+        updated.textContent = t("map.updated", {
+          time: Number.isNaN(date.getTime())
+            ? "—"
+            : new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit" }).format(date),
+        });
+
+        const badge = document.createElement("em");
+        badge.className = `map-popup-badge ${item.demo ? "map-popup-badge--demo" : "map-popup-badge--live"}`;
+        badge.textContent = t(item.demo ? "map.demo" : "map.live");
+
+        popup.append(name, meta, updated, badge);
+        return popup;
+      }
 
       async function refreshMasterLocations() {
         try {
@@ -81,7 +126,6 @@
           const data = await response.json();
           const locations = Array.isArray(data.locations) ? data.locations : [];
 
-          markers.clearLayers();
           const validLocations = locations.filter((item) =>
             item &&
             typeof item.name === "string" &&
@@ -90,42 +134,45 @@
             Number.isFinite(item.longitude)
           );
           const markerPoints = [];
+          const seen = new Set();
 
           validLocations.forEach((item) => {
+            const key = item.id || `${item.name}|${item.district}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+
             const point = [item.latitude, item.longitude];
             markerPoints.push(point);
 
-            const popup = document.createElement("div");
-            popup.className = "map-popup";
-            const name = document.createElement("strong");
-            name.textContent = item.name;
-            const district = document.createElement("span");
-            district.textContent = item.district;
-            const updated = document.createElement("span");
-            const date = new Date(item.updatedAt);
-            const locale = { uz: "uz-UZ", ru: "ru-RU", en: "en-US" }[
-              window.MuI18n ? window.MuI18n.getLang() : "uz"
-            ] || "uz-UZ";
-            updated.textContent = t("map.updated", {
-              time: Number.isNaN(date.getTime())
-                ? "—"
-                : new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit" }).format(date),
-            });
-            popup.append(name, district, updated);
+            const popup = buildPopup(item);
+            const existing = markerIndex.get(key);
 
-            const icon = window.L.divIcon({
-              className: "map-pin-icon",
-              html: "<span></span>",
-              iconSize: [18, 18],
-              iconAnchor: [9, 9],
-            });
-            window.L.marker(point, { icon }).bindPopup(popup).addTo(markers);
+            if (existing) {
+              existing.marker.setLatLng(point);
+              existing.marker.setPopupContent(popup);
+            } else {
+              const icon = window.L.divIcon({
+                className: `map-pin-icon${item.demo ? " map-pin-icon--demo" : ""}`,
+                html: "<span></span>",
+                iconSize: [18, 18],
+                iconAnchor: [9, 9],
+              });
+              const marker = window.L.marker(point, { icon }).bindPopup(popup).addTo(markers);
+              markerIndex.set(key, { marker });
+            }
+          });
+
+          markerIndex.forEach((entry, key) => {
+            if (!seen.has(key)) {
+              markers.removeLayer(entry.marker);
+              markerIndex.delete(key);
+            }
           });
 
           if (validLocations.length === 0) {
             mapStatus.textContent = t("map.empty");
           } else {
-            mapStatus.textContent = "";
+            mapStatus.textContent = t("map.online", { n: validLocations.length });
             if (!hasZoomedToMasters) {
               locationMap.fitBounds(markerPoints, { padding: [32, 32], maxZoom: 14 });
               hasZoomedToMasters = true;
@@ -142,7 +189,7 @@
       }
 
       refreshMasterLocations();
-      window.setInterval(refreshMasterLocations, 30000);
+      window.setInterval(refreshMasterLocations, 20000);
       document.addEventListener("mu:langchange", refreshMasterLocations);
     }
   }

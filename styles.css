@@ -819,6 +819,42 @@ a { color: inherit; }
 .map-popup { display: grid; gap: 3px; }
 .map-popup strong { color: var(--g-900); }
 .map-popup span { color: var(--muted); }
+.map-popup-meta { font-size: .82rem; }
+
+.map-popup-badge {
+  justify-self: start;
+  margin-top: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+.map-popup-badge--live {
+  background: rgba(18, 160, 95, .14);
+  color: var(--g-700);
+}
+
+.map-popup-badge--demo {
+  background: rgba(214, 148, 32, .18);
+  color: #8A5A00;
+}
+
+.map-pin-icon--demo span {
+  background: #E39B2D;
+}
+
+html[data-theme="dark"] .map-popup-badge--live {
+  background: rgba(110, 231, 168, .16);
+  color: #8FE7B8;
+}
+
+html[data-theme="dark"] .map-popup-badge--demo {
+  background: rgba(240, 178, 74, .18);
+  color: #F5C877;
+}
 
 .master-top {
   display: flex;
@@ -1909,6 +1945,19 @@ html[data-theme="dark"] .card-arrow { color: #6EE7A8; }
 /* Masters */
 html[data-theme="dark"] .master-map-heading h3,
 html[data-theme="dark"] .map-popup strong { color: #E6F1EA; }
+
+/* OSM plitalari yorug' bo'lgani uchun tungi rejimda yumshatamiz */
+html[data-theme="dark"] .masters-map { background: #0E1F15; }
+html[data-theme="dark"] .masters-map .leaflet-tile-pane {
+  filter: brightness(.62) contrast(1.08) saturate(.7);
+}
+html[data-theme="dark"] .masters-map .leaflet-control-attribution {
+  background: rgba(10, 24, 16, .78);
+  color: #B9CDBF;
+}
+html[data-theme="dark"] .masters-map .leaflet-control-attribution a { color: #8FE7B8; }
+html[data-theme="dark"] .masters-map .leaflet-popup-content-wrapper,
+html[data-theme="dark"] .masters-map .leaflet-popup-tip { background: #122719; color: #E6F1EA; }
 
 html[data-theme="dark"] .verified-badge {
   color: #8FE7B8;
