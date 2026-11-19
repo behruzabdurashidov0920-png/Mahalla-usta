@@ -241,6 +241,7 @@
         terms: "Foydalanish shartlari",
         privacy: "Maxfiylik siyosati",
         rights: "Barcha huquqlar himoyalangan.",
+        mobile: "Mobil versiya",
       },
       modal: {
         callTitle: "Usta chaqirish",
@@ -864,6 +865,7 @@
         terms: "Условия использования",
         privacy: "Политика конфиденциальности",
         rights: "Все права защищены.",
+        mobile: "Мобильная версия",
       },
       modal: {
         callTitle: "Вызвать мастера",
@@ -1487,6 +1489,7 @@
         terms: "Terms of use",
         privacy: "Privacy policy",
         rights: "All rights reserved.",
+        mobile: "Mobile version",
       },
       modal: {
         callTitle: "Call a master",
