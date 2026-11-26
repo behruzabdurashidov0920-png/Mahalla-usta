@@ -231,12 +231,7 @@
     billing === "yearly" ? t("admin.aiReply.billingYearly") : t("admin.aiReply.billingMonthly");
 
   /* ---------- Offline demo ---------- */
-  const DEMO_ORDERS = [
-    { id: "MU-1048", client: "Nilufar Rahimova", service: "Santexnika", master: "Aziz Karimov", amount: 180000, status: "done", time: "10:24" },
-    { id: "MU-1042", client: "Gulnora Karimova", service: "Santexnika", master: "Aziz Karimov", amount: 150000, status: "canceled", time: "07:52" },
-    { id: "MU-1035", client: "Doniyor Sattorov", service: "Santexnika", master: "Aziz Karimov", amount: 210000, status: "done", time: "Kecha" },
-    { id: "MU-1031", client: "Kamola Ergasheva", service: "Santexnika", master: "Aziz Karimov", amount: 165000, status: "progress", time: "Kecha" },
-  ];
+  const DEMO_ORDERS = [];
 
   const DEMO_PROFILE = {
     id: "c1",
@@ -281,21 +276,21 @@
       user,
       profile: {
         plan: {
-          id: "pro",
-          billing: "yearly",
-          price: 79000,
-          monthly: PLANS.pro.monthly,
-          yearly: PLANS.pro.yearly,
-          commission: PLANS.pro.commission,
-          renewsAt: new Date(Date.now() + 180 * 86400000).toISOString(),
-          subscriptionId: "SUB-241",
-          status: "active",
+          id: "standart",
+          billing: "monthly",
+          price: 0,
+          monthly: PLANS.standart.monthly,
+          yearly: PLANS.standart.yearly,
+          commission: PLANS.standart.commission,
+          renewsAt: null,
+          subscriptionId: null,
+          status: "inactive",
         },
         plans: PLANS,
         orders: mine,
         counts,
         lifetime: counts.total,
-        master: { spec: "Santexnik", district: "Chilonzor", rating: 4.9, jobs: 128, status: "active" },
+        master: { spec: "Santexnik", district: "Chilonzor", rating: 0, jobs: 0, status: "inactive" },
         client: null,
         since: user.since,
       },

@@ -186,6 +186,10 @@ async function handleApi(req, res, url) {
     });
   }
 
+  if (route === "GET /api/public/stats") {
+    return sendJson(res, 200, store.publicStats());
+  }
+
   if (route === "POST /api/auth/login") {
     const body = await readJson(req);
 
@@ -344,20 +348,43 @@ async function handleApi(req, res, url) {
     const service = clean(body.service, 60);
     const district = clean(body.district, 60);
     const master = clean(body.master, 60);
+    const address = clean(body.address, 180);
+    const note = clean(body.note, 500);
     const plan = store.PLANS[body.plan] && body.plan !== "standart" ? body.plan : "";
     const billing = body.billing === "yearly" ? "yearly" : "monthly";
     const kind = ["master", "subscription"].includes(body.kind) ? body.kind : "request";
+    const latitude = body.latitude;
+    const longitude = body.longitude;
 
+    const hasAddress = district.length >= 2 || address.length >= 5;
     if (
       name.length < 2 ||
-      district.length < 2 ||
+      !hasAddress ||
       phone.replace(/\D/g, "").length !== 12 ||
       (kind === "subscription" ? !plan : !service)
     ) {
       return sendJson(res, 400, { error: "invalid_input" });
     }
 
-    const result = store.addRequest({ kind, name, phone, service, district, master, plan, billing });
+    const result = store.addRequest({
+      kind,
+      name,
+      phone,
+      service,
+      district,
+      master,
+      plan,
+      billing,
+      address,
+      latitude,
+      longitude,
+      note,
+    });
+
+    if (result.error === "invalid_location") {
+      return sendJson(res, 400, { error: "invalid_location" });
+    }
+
     const record = result.order || result.subscription || null;
 
     return sendJson(res, 201, {

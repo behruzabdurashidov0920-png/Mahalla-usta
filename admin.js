@@ -81,35 +81,18 @@
     return key ? t(key) : value;
   }
 
-  /* ---------- Offline demo data ---------- */
-  const DEMO_ORDERS = [
-    { id: "MU-1048", client: "Nilufar Rahimova", service: "Santexnika", master: "Aziz Karimov", amount: 180000, status: "done", time: "10:24" },
-    { id: "MU-1047", client: "Jasur Tursunov", service: "Elektr ishlari", master: "Sardor Toshmatov", amount: 240000, status: "progress", time: "09:58" },
-    { id: "MU-1046", client: "Malika Karimova", service: "Bo'yash va suvoq", master: "Dilnoza Yusupova", amount: 950000, status: "new", time: "09:31" },
-    { id: "MU-1045", client: "Olim Rasulov", service: "Duradgorlik", master: "Rustam Qodirov", amount: 420000, status: "progress", time: "09:05" },
-    { id: "MU-1044", client: "Shahnoza Mirzayeva", service: "Konditsioner", master: "Bekzod Umarov", amount: 300000, status: "done", time: "08:47" },
-    { id: "MU-1043", client: "Anvar Saidov", service: "Plitka va kafel", master: "Farrux Ismoilov", amount: 1200000, status: "new", time: "08:15" },
-    { id: "MU-1042", client: "Gulnora Karimova", service: "Santexnika", master: "Aziz Karimov", amount: 150000, status: "canceled", time: "07:52" },
-    { id: "MU-1041", client: "Bobur Mahmudov", service: "Elektr ishlari", master: "Sardor Toshmatov", amount: 95000, status: "done", time: "07:20" },
-    { id: "MU-1040", client: "Zulfiya Rahimova", service: "Bo'yash va suvoq", master: "Dilnoza Yusupova", amount: 680000, status: "done", time: "Kecha" },
-    { id: "MU-1039", client: "Timur Aliyev", service: "Konditsioner", master: "Bekzod Umarov", amount: 260000, status: "progress", time: "Kecha" },
-  ];
+  /* ---------- Offline demo data (zeroed) ---------- */
+  const DEMO_ORDERS = [];
 
   const DEMO_MASTERS = [
-    { name: "Aziz Karimov", spec: "Santexnik", district: "Chilonzor", rating: 4.9, jobs: 128, status: "active", plan: "pro" },
-    { name: "Dilnoza Yusupova", spec: "Bo'yoqchi", district: "Yunusobod", rating: 5.0, jobs: 96, status: "active", plan: "pro" },
-    { name: "Sardor Toshmatov", spec: "Elektrik", district: "Mirzo Ulug'bek", rating: 4.8, jobs: 211, status: "busy", plan: "biznes" },
-    { name: "Rustam Qodirov", spec: "Duradgor", district: "Sergeli", rating: 4.7, jobs: 74, status: "active", plan: "standart" },
-    { name: "Bekzod Umarov", spec: "Konditsioner ustasi", district: "Yakkasaroy", rating: 4.9, jobs: 163, status: "active", plan: "pro" },
+    { name: "Aziz Karimov", spec: "Santexnik", district: "Chilonzor", rating: 0, jobs: 0, status: "inactive", plan: "standart" },
+    { name: "Dilnoza Yusupova", spec: "Bo'yoqchi", district: "Yunusobod", rating: 0, jobs: 0, status: "inactive", plan: "standart" },
+    { name: "Sardor Toshmatov", spec: "Elektrik", district: "Mirzo Ulug'bek", rating: 0, jobs: 0, status: "inactive", plan: "standart" },
+    { name: "Rustam Qodirov", spec: "Duradgor", district: "Sergeli", rating: 0, jobs: 0, status: "inactive", plan: "standart" },
+    { name: "Bekzod Umarov", spec: "Konditsioner ustasi", district: "Yakkasaroy", rating: 0, jobs: 0, status: "inactive", plan: "standart" },
   ];
 
-  const DEMO_SUBSCRIPTIONS = [
-    { id: "SUB-241", name: "Aziz Karimov", phone: "+998 90 123 45 67", plan: "pro", billing: "yearly", price: 79000, district: "Chilonzor", status: "active", time: "09:41", date: "04.11.2026" },
-    { id: "SUB-240", name: "Bekzod Umarov", phone: "+998 90 987 65 43", plan: "pro", billing: "monthly", price: 99000, district: "Yakkasaroy", status: "active", time: "08:26", date: "03.11.2026" },
-    { id: "SUB-239", name: "Sardor Toshmatov", phone: "+998 91 234 56 78", plan: "biznes", billing: "monthly", price: 249000, district: "Mirzo Ulug'bek", status: "active", time: "19:05", date: "02.11.2026" },
-    { id: "SUB-238", name: "Dilnoza Yusupova", phone: "+998 97 700 88 21", plan: "pro", billing: "monthly", price: 99000, district: "Yunusobod", status: "trial", time: "12:33", date: "01.11.2026" },
-    { id: "SUB-237", name: "Rustam Qodirov", phone: "+998 88 909 11 22", plan: "standart", billing: "monthly", price: 0, district: "Sergeli", status: "canceled", time: "11:12", date: "29.10.2026" },
-  ];
+  const DEMO_SUBSCRIPTIONS = [];
 
   const DEMO_PLANS = {
     standart: { monthly: 0, yearly: 0, commission: 12 },
@@ -117,37 +100,30 @@
     biznes: { monthly: 249000, yearly: 199000, commission: 5 },
   };
 
-  const DEMO_CLIENTS = [
-    { name: "Nilufar Rahimova", phone: "+998 90 123 45 67", orders: 12, last: "27.10.2026", status: "active" },
-    { name: "Jasur Tursunov", phone: "+998 93 555 12 34", orders: 8, last: "26.10.2026", status: "active" },
-    { name: "Malika Karimova", phone: "+998 97 700 88 21", orders: 5, last: "25.10.2026", status: "active" },
-    { name: "Olim Rasulov", phone: "+998 91 234 56 78", orders: 3, last: "24.10.2026", status: "inactive" },
-    { name: "Shahnoza Mirzayeva", phone: "+998 88 909 11 22", orders: 9, last: "23.10.2026", status: "active" },
-    { name: "Anvar Saidov", phone: "+998 90 987 65 43", orders: 2, last: "21.10.2026", status: "active" },
-  ];
+  const DEMO_CLIENTS = [];
 
   const DEMO_STATS = {
-    ordersTotal: 1248,
-    ordersToday: 128,
-    newToday: 12,
-    progressToday: 8,
-    doneToday: 104,
-    canceledToday: 4,
-    ordersGrowth: 12.4,
-    mastersActive: 342,
-    mastersFree: 18,
-    mastersGrowth: 4.8,
-    clientsTotal: 5670,
-    clientsGrowth: 8.1,
-    newClientsToday: 3,
-    revenue: 128400000,
-    revenueGrowth: 15.2,
-    repeatRate: 64,
-    proSubscribers: 96,
-    proGrowth: 18.4,
-    bizSubscribers: 14,
-    planMrr: 12990000,
-    planConversion: 3.4,
+    ordersTotal: 0,
+    ordersToday: 0,
+    newToday: 0,
+    progressToday: 0,
+    doneToday: 0,
+    canceledToday: 0,
+    ordersGrowth: 0,
+    mastersActive: 0,
+    mastersFree: 0,
+    mastersGrowth: 0,
+    clientsTotal: 0,
+    clientsGrowth: 0,
+    newClientsToday: 0,
+    revenue: 0,
+    revenueGrowth: 0,
+    repeatRate: 0,
+    proSubscribers: 0,
+    proGrowth: 0,
+    bizSubscribers: 0,
+    planMrr: 0,
+    planConversion: 0,
   };
 
   function readLocalSession() {

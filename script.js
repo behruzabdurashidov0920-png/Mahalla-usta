@@ -380,6 +380,11 @@
     if (district) districtInput.value = district;
   }
 
+  function afterModalOpen() {
+    initRequestMap();
+    if (requestMap) setTimeout(() => requestMap.invalidateSize(), 80);
+  }
+
   function openModal(trigger) {
     lastFocused = document.activeElement;
     const { preset, master, plan } = trigger.dataset;
@@ -392,6 +397,7 @@
 
     const firstField = modalFormView.hidden ? null : document.getElementById("client-name");
     requestAnimationFrame(() => firstField && firstField.focus());
+    afterModalOpen();
   }
 
   function closeModal() {
@@ -409,6 +415,7 @@
       document.body.style.overflow = "hidden";
       const firstField = modalFormView.hidden ? null : document.getElementById("client-name");
       requestAnimationFrame(() => firstField && firstField.focus());
+      afterModalOpen();
     },
   };
 
@@ -458,6 +465,127 @@
 
   /* ---------- Request form ---------- */
   const submitBtn = requestForm.querySelector('button[type="submit"]');
+  const addressInput = document.getElementById("client-address");
+  const latInput = document.getElementById("client-lat");
+  const lngInput = document.getElementById("client-lng");
+  const noteInput = document.getElementById("client-note");
+  const coordStatus = document.getElementById("client-coord-status");
+
+  function setCoordStatus(text, isError) {
+    if (!coordStatus) return;
+    coordStatus.textContent = text || "";
+    coordStatus.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function clearCoords() {
+    if (latInput) latInput.value = "";
+    if (lngInput) lngInput.value = "";
+  }
+
+  /* ---------- Request map (hybrid: pin + qo'lda manzil) ---------- */
+  let requestMap = null;
+  let requestMapMarker = null;
+  let requestMapInited = false;
+
+  function setRequestPin(lat, lng, options = {}) {
+    if (!requestMap || !window.L) return;
+    const ll = [Number(lat), Number(lng)];
+    if (!Number.isFinite(ll[0]) || !Number.isFinite(ll[1])) return;
+    if (latInput) latInput.value = String(ll[0]);
+    if (lngInput) lngInput.value = String(ll[1]);
+
+    if (requestMapMarker) {
+      requestMapMarker.setLatLng(ll);
+    } else {
+      requestMapMarker = window.L.marker(ll, { draggable: true }).addTo(requestMap);
+      requestMapMarker.on("dragend", () => {
+        const p = requestMapMarker.getLatLng();
+        if (latInput) latInput.value = String(p.lat);
+        if (lngInput) lngInput.value = String(p.lng);
+        reverseGeocode(p.lat, p.lng);
+      });
+    }
+
+    if (options.pan) requestMap.setView(ll, options.zoom || Math.max(requestMap.getZoom(), 15));
+    if (options.label) setCoordStatus(options.label, false);
+    else setCoordStatus(t("map.pinSet", { lat: ll[0].toFixed(5), lng: ll[1].toFixed(5) }), false);
+  }
+
+  async function reverseGeocode(lat, lng) {
+    if (!addressInput) return;
+    setCoordStatus(t("map.geocoding"), false);
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lng)}&accept-language=${encodeURIComponent(window.MuI18n ? window.MuI18n.getLang() : "uz")}`;
+      const res = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error("geocode_failed");
+      const data = await res.json();
+      const label = data && data.display_name ? String(data.display_name).slice(0, 180) : "";
+      if (label) {
+        addressInput.value = label;
+        // tumanni ham taxminiy to'ldirishga harakat qilamiz
+        const addr = data.address || {};
+        const districtGuess = addr.city_district || addr.district || addr.suburb || addr.neighbourhood || "";
+        if (districtGuess && districtInput && !districtInput.value.trim()) {
+          districtInput.value = districtGuess;
+        }
+      }
+      setCoordStatus(t("map.pinSet", { lat: Number(lat).toFixed(5), lng: Number(lng).toFixed(5) }), false);
+    } catch (e) {
+      console.warn("Reverse geocode failed:", e);
+      setCoordStatus(t("map.pinSetManual", { lat: Number(lat).toFixed(5), lng: Number(lng).toFixed(5) }), false);
+    }
+  }
+
+  function initRequestMap() {
+    const mapEl = document.getElementById("request-map");
+    if (requestMapInited || !mapEl || !window.L) return;
+    requestMapInited = true;
+
+    requestMap = window.L.map(mapEl, { zoomControl: true }).setView([41.2995, 69.2401], 12);
+    window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    }).addTo(requestMap);
+
+    requestMap.on("click", (e) => {
+      setRequestPin(e.latlng.lat, e.latlng.lng, { pan: false });
+      reverseGeocode(e.latlng.lat, e.latlng.lng);
+    });
+
+    const clearBtn = document.getElementById("request-map-clear");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        clearCoords();
+        if (requestMapMarker) {
+          requestMapMarker.remove();
+          requestMapMarker = null;
+        }
+        setCoordStatus(t("map.pinCleared"), false);
+      });
+    }
+
+    const locateBtn = document.getElementById("request-map-locate");
+    if (locateBtn) {
+      locateBtn.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+          showToast(t("toast.geoUnsupported"));
+          return;
+        }
+        setCoordStatus(t("map.locating"), false);
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setRequestPin(pos.coords.latitude, pos.coords.longitude, { pan: true, zoom: 16 });
+            reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+          },
+          () => {
+            setCoordStatus(t("map.locateFailed"), true);
+            showToast(t("toast.geoFailed"));
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      });
+    }
+  }
 
   requestForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -469,43 +597,67 @@
       return;
     }
 
+    const addressValue = addressInput ? addressInput.value.trim() : "";
+    const districtValue = districtInput.value.trim();
+    if (districtValue.length < 2 && addressValue.length < 5) {
+      showToast(t("toast.address"));
+      (addressInput || districtInput).focus();
+      return;
+    }
+
     submitBtn.disabled = true;
     submitBtn.textContent = t("common.sending");
 
-    let delivered = false;
-
     try {
+      const payload = {
+        kind: activeKind,
+        name: document.getElementById("client-name").value.trim(),
+        phone: phoneInput.value,
+        service: serviceSelect.value,
+        district: districtValue,
+        address: addressValue,
+        latitude: latInput && latInput.value ? Number(latInput.value) : null,
+        longitude: lngInput && lngInput.value ? Number(lngInput.value) : null,
+        note: noteInput ? noteInput.value.trim() : "",
+        master: activeMaster,
+        plan: activePlan,
+        billing: currentBilling,
+      };
+
       const response = await fetch("/api/requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          kind: activeKind,
-          name: document.getElementById("client-name").value,
-          phone: phoneInput.value,
-          service: serviceSelect.value,
-          district: districtInput.value,
-          master: activeMaster,
-          plan: activePlan,
-          billing: currentBilling,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      delivered = response.ok || response.status === 404;
-    } catch (error) {
-      /* server yo'q — demo rejimda so'rov muvaffaqiyatli hisoblanadi */
-      delivered = true;
-    }
+      let data = {};
+      try { data = await response.json(); } catch (_) { /* ignore */ }
 
-    try {
-      if (!delivered) {
-        showToast(t("toast.failed"));
+      if (!response.ok) {
+        if (data.error === "invalid_location") {
+          showToast(t("toast.location"));
+        } else if (data.error === "invalid_input") {
+          showToast(t("toast.invalid"));
+        } else {
+          showToast(t("toast.failed"));
+        }
         return;
       }
 
       modalFormView.hidden = true;
       modalSuccessView.hidden = false;
-      modalSuccessView.querySelector(".btn").focus();
+      const okBtn = modalSuccessView.querySelector(".btn");
+      if (okBtn) okBtn.focus();
       requestForm.reset();
+      clearCoords();
+      setCoordStatus("");
+      if (requestMapMarker) {
+        requestMapMarker.remove();
+        requestMapMarker = null;
+      }
+    } catch (error) {
+      console.error("Request submit failed:", error);
+      showToast(t("toast.network"));
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = t("modal.submit");
@@ -525,5 +677,27 @@
     modal.hidden = false;
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => document.getElementById("client-name").focus());
+    afterModalOpen();
   });
+
+  /* ---------- Public stats (real DB-backed) ---------- */
+  async function loadPublicStats() {
+    const nodes = document.querySelectorAll("[data-stat]");
+    if (!nodes.length) return;
+    try {
+      const res = await fetch("/api/public/stats", { cache: "no-store" });
+      if (!res.ok) throw new Error("stats_" + res.status);
+      const stats = await res.json();
+      nodes.forEach((node) => {
+        const key = node.getAttribute("data-stat");
+        const val = stats[key];
+        node.textContent = typeof val === "number" ? String(val) : "—";
+      });
+    } catch (e) {
+      console.warn("Public stats could not be loaded:", e);
+      nodes.forEach((node) => { if (node.textContent.trim() === "—") node.textContent = "0"; });
+    }
+  }
+
+  loadPublicStats();
 })();

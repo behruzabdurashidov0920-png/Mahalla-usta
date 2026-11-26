@@ -1544,15 +1544,63 @@ html[data-theme="dark"] .map-popup-badge--demo {
   cursor: pointer;
 }
 
-.form-row input::placeholder { color: #9AAEA1; font-weight: 500; }
+.form-row textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: #FAFCFB;
+  border: 1px solid #DCE6E0;
+  border-radius: var(--r-sm);
+  outline: none;
+  resize: vertical;
+  min-height: 72px;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.form-row input::placeholder,
+.form-row textarea::placeholder { color: #9AAEA1; font-weight: 500; }
 
 .form-row input:focus,
-.form-row select:focus {
+.form-row select:focus,
+.form-row textarea:focus {
   outline: none;
   background: #fff;
   border-color: var(--g-400);
   box-shadow: 0 0 0 4px rgba(18, 160, 95, .12);
 }
+
+.request-map-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.request-map-head label { margin: 0; }
+
+.request-map-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.request-map-actions .btn-sm { padding: 7px 10px; font-size: .76rem; }
+
+.request-map {
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #DCE6E0;
+  background: var(--mint-50);
+}
+
+.coord-status {
+  margin: 8px 0 0;
+  font-size: .78rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.coord-status.is-error { color: #B91C1C; }
 
 #request-form .btn { margin-top: 8px; }
 
@@ -2009,12 +2057,23 @@ html[data-theme="dark"] .modal-backdrop { background: rgba(2, 12, 7, .66); }
 html[data-theme="dark"] .form-row label { color: #C3D6CA; }
 
 html[data-theme="dark"] .form-row input,
-html[data-theme="dark"] .form-row select { background: #0C1B13; }
+html[data-theme="dark"] .form-row select,
+html[data-theme="dark"] .form-row textarea {
+  background: #0C1B13;
+  border-color: #21362A;
+  color: #E6F1EA;
+}
 
-html[data-theme="dark"] .form-row input::placeholder { color: #6E8175; }
+html[data-theme="dark"] .form-row input::placeholder,
+html[data-theme="dark"] .form-row textarea::placeholder { color: #6E8175; }
 
 html[data-theme="dark"] .form-row input:focus,
-html[data-theme="dark"] .form-row select:focus { background: #122119; }
+html[data-theme="dark"] .form-row select:focus,
+html[data-theme="dark"] .form-row textarea:focus { background: #122119; }
+
+html[data-theme="dark"] .request-map { border-color: #21362A; background: #0E1F15; }
+html[data-theme="dark"] .coord-status { color: #97ADA0; }
+html[data-theme="dark"] .coord-status.is-error { color: #FCA5A5; }
 
 html[data-theme="dark"] .modal-close { color: #8FE7B8; }
 html[data-theme="dark"] .success-icon { color: #6EE7A8; }
@@ -2466,3 +2525,54 @@ html[data-theme="dark"] .ai-form textarea:focus {
   .ai-launcher-icon svg { width: 25px; height: 25px; }
 }
 
+
+/* ---------- Launch card (replaces fake testimonial) ---------- */
+.launch-card .eyebrow { margin-bottom: 10px; }
+.launch-card h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.launch-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-bottom: 18px;
+  max-width: 62ch;
+}
+.launch-list {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
+.launch-list li {
+  position: relative;
+  padding-left: 28px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.launch-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--g-100);
+  color: var(--g-700);
+  font-size: .72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+html[data-theme="dark"] .launch-card h3 { color: #E6F1EA; }
+html[data-theme="dark"] .launch-text { color: #97ADA0; }
+html[data-theme="dark"] .launch-list li { color: #C3D6CA; }
+html[data-theme="dark"] .launch-list li::before { background: rgba(20,184,106,.18); color: #8FE7B8; }

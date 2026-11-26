@@ -108,22 +108,22 @@
             </button>
             <a class="btn btn-ghost btn-lg" href="#how" data-i18n="hero.ctaHow">Qanday ishlaydi</a>
           </div>
-          <dl class="hero-stats reveal">
+          <dl class="hero-stats reveal" id="hero-stats">
             <div>
-              <dt data-i18n="stats.activeMasters">Faol ustalar</dt>
-              <dd><span data-count="2500">0</span>+</dd>
+              <dt data-i18n="stats.masters">Ro'yxatdan o'tgan ustalar</dt>
+              <dd><span data-stat="masters">—</span></dd>
             </div>
             <div>
-              <dt data-i18n="stats.doneOrders">Bajarilgan buyurtma</dt>
-              <dd><span data-count="18000">0</span>+</dd>
+              <dt data-i18n="stats.completedOrders">Yakunlangan buyurtmalar</dt>
+              <dd><span data-stat="ordersCompleted">—</span></dd>
             </div>
             <div>
-              <dt data-i18n="stats.rating">O'rtacha baho</dt>
-              <dd>4.9<span class="star" aria-hidden="true">★</span></dd>
+              <dt data-i18n="stats.services">Xizmat yo'nalishlari</dt>
+              <dd><span data-stat="services">—</span></dd>
             </div>
             <div>
-              <dt data-i18n="stats.regions">Viloyatlar</dt>
-              <dd><span data-count="12">0</span></dd>
+              <dt data-i18n="stats.coverage">Qamrab olingan tumanlar</dt>
+              <dd><span data-stat="districts">—</span></dd>
             </div>
           </dl>
         </div>
@@ -143,10 +143,10 @@
               </span>
             </div>
             <div class="float-card float-rating">
-              <span class="rating-score">4.9</span>
+              <span class="rating-score" aria-hidden="true">✓</span>
               <span>
-                <span class="stars" aria-hidden="true">★★★★★</span>
-                <small data-i18n="hero.reviews">2 400+ baho</small>
+                <strong data-i18n="hero.launchTitle">Ishga tushish bosqichi</strong>
+                <small data-i18n="hero.launchSub">Birinchi ustalar va mijozlar uchun ochiq</small>
               </span>
             </div>
           </div>
@@ -528,20 +528,16 @@
           </article>
         </div>
 
-        <figure class="quote-card reveal">
-          <svg class="quote-mark" viewBox="0 0 48 36" aria-hidden="true"><path d="M18 4c-8 3-13 9-13 17v11h14V18h-8c0-5 2.5-8 7-10L18 4Zm25 0c-8 3-13 9-13 17v11h14V18h-8c0-5 2.5-8 7-10L43 4Z" /></svg>
-          <blockquote data-i18n="quote.text">
-            Uyimdagi kran bir kunda tuzatildi. Narx oldindan aytildi, usta o'z vaqtida keldi.
-            Endi barcha tanishlarimga MahallaUsta'ni tavsiya qilaman.
-          </blockquote>
-          <figcaption>
-            <span class="avatar avatar-sm" aria-hidden="true">NR</span>
-            <span>
-              <strong data-i18n="quote.author">Nilufar Rahimova</strong>
-              <small data-i18n="quote.location">Yunusobod tumani, Toshkent</small>
-            </span>
-          </figcaption>
-        </figure>
+        <div class="quote-card reveal launch-card" id="launch-card">
+          <p class="eyebrow" data-i18n="launch.eyebrow">Hozirgi bosqich</p>
+          <h3 data-i18n="launch.title">Platforma ishga tushish bosqichida</h3>
+          <p class="launch-text" data-i18n="launch.text">Hozircha soxta reyting yoki uydirma sharhlar ko'rsatmaymiz. Buyurtmalar real saqlanadi, usta profillari tekshiriladi va birinchi foydalanuvchilar fikri ochiq qabul qilinadi.</p>
+          <ul class="launch-list">
+            <li data-i18n="launch.point1">Buyurtma ma'lumotlari serverda saqlanadi</li>
+            <li data-i18n="launch.point2">Usta profili va aloqa ma'lumotlari tekshiriladi</li>
+            <li data-i18n="launch.point3">Manzilni xaritadan yoki qo'lda kiritish mumkin</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -657,7 +653,28 @@
           </div>
           <div class="form-row">
             <label for="client-district" data-i18n="modal.districtLabel">Tumaningiz</label>
-            <input id="client-district" name="district" type="text" placeholder="Masalan, Chilonzor" data-i18n-placeholder="modal.districtPlaceholder" required />
+            <input id="client-district" name="district" type="text" placeholder="Masalan, Chilonzor" data-i18n-placeholder="modal.districtPlaceholder" autocomplete="address-level2" />
+          </div>
+          <div class="form-row">
+            <label for="client-address" data-i18n="modal.addressLabel">Manzil (qo'lda yozish)</label>
+            <textarea id="client-address" name="address" rows="2" placeholder="Viloyat/shahar, tuman, mahalla, ko'cha, uy" data-i18n-placeholder="modal.addressPlaceholder" autocomplete="street-address"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="request-map-head">
+              <label data-i18n="modal.mapLabel">Xaritadan belgilash</label>
+              <div class="request-map-actions">
+                <button type="button" class="btn btn-ghost btn-sm" id="request-map-locate" data-i18n="modal.mapLocate">Joylashuvim</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="request-map-clear" data-i18n="modal.mapClear">Pinni olib tashlash</button>
+              </div>
+            </div>
+            <div id="request-map" class="request-map" aria-label="Manzil xaritasi"></div>
+            <p class="coord-status" id="client-coord-status" data-i18n="modal.mapHint">Xaritada nuqtani bosing yoki manzilni qo'lda yozing.</p>
+            <input type="hidden" id="client-lat" name="latitude" />
+            <input type="hidden" id="client-lng" name="longitude" />
+          </div>
+          <div class="form-row">
+            <label for="client-note" data-i18n="modal.noteLabel">Muammo haqida qisqacha (ixtiyoriy)</label>
+            <textarea id="client-note" name="note" rows="2" placeholder="Masalan: oshxonadagi kran oqyapti" data-i18n-placeholder="modal.notePlaceholder"></textarea>
           </div>
           <button class="btn btn-primary btn-lg btn-block" type="submit" data-i18n="modal.submit">So'rov yuborish</button>
           <p class="form-note" data-i18n="modal.note">Yuborish orqali siz foydalanish shartlariga rozilik bildirasiz.</p>
