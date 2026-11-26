@@ -149,6 +149,7 @@
         pinCleared: "Xarita nuqtasi olib tashlandi.",
         locating: "Joylashuv aniqlanmoqda...",
         locateFailed: "Joylashuvni aniqlab bo'lmadi.",
+        loadFailed: "Xarita yuklanmadi. Internetni tekshiring yoki manzilni qo'lda yozing.",
       },
       master: {
         azizRole: "Santexnik · 9 yillik tajriba",
@@ -797,6 +798,7 @@
         pinCleared: "Метка на карте убрана.",
         locating: "Определяем местоположение...",
         locateFailed: "Не удалось определить местоположение.",
+        loadFailed: "Карта не загрузилась. Проверьте интернет или введите адрес вручную.",
       },
       master: {
         azizRole: "Сантехник · опыт 9 лет",
@@ -1445,6 +1447,7 @@
         pinCleared: "Map pin removed.",
         locating: "Detecting your location...",
         locateFailed: "Could not determine location.",
+        loadFailed: "Map failed to load. Check your connection or enter the address manually.",
       },
       master: {
         azizRole: "Plumber · 9 years of experience",

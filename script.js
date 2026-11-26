@@ -382,7 +382,10 @@
 
   function afterModalOpen() {
     initRequestMap();
-    if (requestMap) setTimeout(() => requestMap.invalidateSize(), 80);
+    if (requestMap) {
+      setTimeout(() => requestMap.invalidateSize(), 60);
+      setTimeout(() => requestMap.invalidateSize(), 250);
+    }
   }
 
   function openModal(trigger) {
@@ -538,7 +541,11 @@
 
   function initRequestMap() {
     const mapEl = document.getElementById("request-map");
-    if (requestMapInited || !mapEl || !window.L) return;
+    if (requestMapInited || !mapEl) return;
+    if (!window.L) {
+      setCoordStatus(t("map.loadFailed"), true);
+      return;
+    }
     requestMapInited = true;
 
     requestMap = window.L.map(mapEl, { zoomControl: true }).setView([41.2995, 69.2401], 12);
