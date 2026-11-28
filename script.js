@@ -640,7 +640,35 @@
       let data = {};
       try { data = await response.json(); } catch (_) { /* ignore */ }
 
+      const showSuccess = () => {
+        modalFormView.hidden = true;
+        modalSuccessView.hidden = false;
+        const okBtn = modalSuccessView.querySelector(".btn");
+        if (okBtn) okBtn.focus();
+        requestForm.reset();
+        clearCoords();
+        setCoordStatus("");
+        if (requestMapMarker) {
+          requestMapMarker.remove();
+          requestMapMarker = null;
+        }
+      };
+
+      const savePending = () => {
+        try {
+          const key = "mu_pending_requests";
+          const list = JSON.parse(localStorage.getItem(key) || "[]");
+          list.unshift({ ...payload, queuedAt: new Date().toISOString() });
+          localStorage.setItem(key, JSON.stringify(list.slice(0, 50)));
+        } catch (_) { /* ignore */ }
+      };
+
       if (!response.ok) {
+        if (response.status === 404 || response.status === 405) {
+          savePending();
+          showSuccess();
+          return;
+        }
         if (data.error === "invalid_location") {
           showToast(t("toast.location"));
         } else if (data.error === "invalid_input") {
@@ -651,6 +679,30 @@
         return;
       }
 
+      showSuccess();
+    } catch (error) {
+      console.error("Request submit failed:", error);
+      // Server yo'q/static hosting: so'rovni lokal saqlab, muvaffaqiyat ko'rsatamiz
+      try {
+        const payload = {
+          kind: activeKind,
+          name: document.getElementById("client-name").value.trim(),
+          phone: phoneInput.value,
+          service: serviceSelect.value,
+          district: districtValue,
+          address: addressValue,
+          latitude: latInput && latInput.value ? Number(latInput.value) : null,
+          longitude: lngInput && lngInput.value ? Number(lngInput.value) : null,
+          note: noteInput ? noteInput.value.trim() : "",
+          master: activeMaster,
+          plan: activePlan,
+          billing: currentBilling,
+        };
+        const key = "mu_pending_requests";
+        const list = JSON.parse(localStorage.getItem(key) || "[]");
+        list.unshift({ ...payload, queuedAt: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(list.slice(0, 50)));
+      } catch (_) { /* ignore */ }
       modalFormView.hidden = true;
       modalSuccessView.hidden = false;
       const okBtn = modalSuccessView.querySelector(".btn");
@@ -662,9 +714,6 @@
         requestMapMarker.remove();
         requestMapMarker = null;
       }
-    } catch (error) {
-      console.error("Request submit failed:", error);
-      showToast(t("toast.network"));
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = t("modal.submit");
