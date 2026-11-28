@@ -1030,10 +1030,11 @@ html[data-theme="dark"] .map-popup-badge--demo {
   border-radius: 999px;
   background: transparent;
   color: var(--muted);
+  font: inherit;
   font-size: .9rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color .18s var(--ease), color .18s var(--ease);
+  transition: background-color .18s var(--ease), color .18s var(--ease), box-shadow .18s var(--ease);
 }
 
 .bt:hover { color: var(--g-700); }
@@ -2601,3 +2602,24 @@ html[data-theme="dark"] .launch-list li { color: #C3D6CA; }
 html[data-theme="dark"] .launch-list li::before { background: rgba(20,184,106,.18); color: #8FE7B8; }
 html[data-theme="dark"] .float-rating strong { color: #E6F1EA; }
 html[data-theme="dark"] .float-rating small { color: #97ADA0; }
+
+/* Billing toggle dark mode */
+html[data-theme="dark"] .billing-toggle {
+  background: #122719;
+  border-color: rgba(255, 255, 255, .1);
+  box-shadow: none;
+}
+html[data-theme="dark"] .bt { color: #97ADA0; }
+html[data-theme="dark"] .bt:hover { color: #CFE9DB; }
+html[data-theme="dark"] .bt.active {
+  background: linear-gradient(135deg, var(--g-500), var(--g-700));
+  color: #fff;
+}
+html[data-theme="dark"] .bt-save {
+  background: rgba(20, 184, 106, .16);
+  color: #8FE7B8;
+}
+html[data-theme="dark"] .bt.active .bt-save {
+  background: rgba(255, 255, 255, .22);
+  color: #fff;
+}
