@@ -1919,6 +1919,13 @@ html[data-theme="dark"] ::selection { background: #173322; color: #E6F1EA; }
 /* Header */
 html[data-theme="dark"] .site-header {
   background: rgba(10, 23, 16, .88);
+  border-bottom-color: transparent;
+}
+
+html[data-theme="dark"] .site-header.scrolled {
+  background: rgba(10, 23, 16, .94);
+  border-color: rgba(255, 255, 255, .08);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .28);
 }
 
 html[data-theme="dark"] .brand-name span { color: #3DBB7F; }
@@ -1926,7 +1933,8 @@ html[data-theme="dark"] .brand-name span { color: #3DBB7F; }
 html[data-theme="dark"] .nav > a { color: #C3D6CA; }
 html[data-theme="dark"] .nav > a:hover { color: #6EE7A8; }
 
-html[data-theme="dark"] .hamburger { background: #122719; }
+html[data-theme="dark"] .hamburger { background: #122719; border-color: rgba(255,255,255,.12); }
+html[data-theme="dark"] .hamburger span { background: #CFE9DB; }
 
 html[data-theme="dark"] .theme-toggle {
   border-color: rgba(255, 255, 255, .14);
