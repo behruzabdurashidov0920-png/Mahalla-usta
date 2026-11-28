@@ -447,7 +447,7 @@ function serveStatic(req, res) {
 }
 
 /* ---------- Server ---------- */
-const server = http.createServer(async (req, res) => {
+const handler = async (req, res) => {
   const url = new URL(req.url, "http://localhost");
 
   try {
@@ -473,9 +473,17 @@ const server = http.createServer(async (req, res) => {
     }
     if (status === 500) console.error(error);
   }
-});
+};
 
-server.listen(PORT, () => {
-  console.log(`MahallaUsta server: http://localhost:${PORT}`);
-  console.log(`Admin: admin@mahallausta.uz (parolni ADMIN_PASSWORD bilan o'zgartirish mumkin)`);
-});
+const server = http.createServer(handler);
+
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`MahallaUsta server: http://localhost:${PORT}`);
+    console.log(`Admin: admin@mahallausta.uz (parolni ADMIN_PASSWORD bilan o'zgartirish mumkin)`);
+  });
+}
+
+module.exports = handler;
+module.exports.handler = handler;
+module.exports.server = server;
